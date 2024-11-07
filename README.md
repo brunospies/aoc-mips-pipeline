@@ -1,7 +1,7 @@
 # aoc-mips-pipeline
 Passos para realizar a Simulação ___________________________________________________________________________________________
 
-*Abrir o terminal
+*Abrir o terminal*
 --TestBench-----------------------------------------------------------------------------------------------------------------
  cd MIPS/tb                       #acessar a pasta tb;
  make run                         #inicializar o Xcellium;
