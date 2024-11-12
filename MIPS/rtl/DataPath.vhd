@@ -13,7 +13,7 @@ use work.MIPS_package.all;
 entity DataPath is
     generic (
         PC_START_ADDRESS    : integer := 0;
-        SYNTHESIS           : std_logic := '0'
+        SYNTHESIS           : std_logic := '1'
     );
     port (  
         clock               : in  std_logic;
