@@ -10,7 +10,7 @@ use work.MIPS_package.all;
 
 entity MIPS_pipeline is
     generic (
-        PC_START_ADDRESS    : integer := 0 
+        PC_START_ADDRESS    : integer := 4194304 
     );
     port ( 
         clock, reset        : in std_logic;
