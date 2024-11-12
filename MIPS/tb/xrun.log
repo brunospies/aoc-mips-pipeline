@@ -1,0 +1,300 @@
+xrun: 19.09-s005: (c) Copyright 1995-2019 Cadence Design Systems, Inc.
+TOOL:	xrun	19.09-s005: Started on Nov 12, 2024 at 10:06:36 -03
+xrun
+	-v200x
+	-gui
+	-f filelist.txt
+		Util_package.vhd
+		../rtl/MIPS_package.vhd
+		../rtl/ALU.vhd
+		../rtl/RegisterNbits.vhd
+		../rtl/Forwarding_unit.vhd
+		../rtl/HazardDetection_unit.vhd
+		../rtl/BranchDetection_unit.vhd
+		../rtl/RegisterFile.vhd
+		../rtl/Stage_ID.vhd
+		../rtl/Stage_EX.vhd
+		../rtl/Stage_MEM.vhd
+		../rtl/Stage_WB.vhd
+		../rtl/DataPath.vhd
+		../rtl/ControlPath.vhd
+		../rtl/MIPS_pipeline.vhd
+		Memory.vhd
+		MIPS_pipeline_tb.vhd
+	-top MIPS_pipeline_tb
+	-access +rwc
+	-gui
+../rtl/MIPS_package.vhd:
+	errors: 0, warnings: 0
+../rtl/ALU.vhd:
+	errors: 0, warnings: 0
+../rtl/HazardDetection_unit.vhd:
+	errors: 0, warnings: 0
+../rtl/BranchDetection_unit.vhd:
+	errors: 0, warnings: 0
+../rtl/Stage_ID.vhd:
+	errors: 0, warnings: 0
+../rtl/Stage_EX.vhd:
+	errors: 0, warnings: 0
+../rtl/Stage_MEM.vhd:
+	errors: 0, warnings: 0
+../rtl/Stage_WB.vhd:
+	errors: 0, warnings: 0
+../rtl/DataPath.vhd:
+	errors: 0, warnings: 0
+../rtl/ControlPath.vhd:
+	errors: 0, warnings: 0
+../rtl/MIPS_pipeline.vhd:
+	errors: 0, warnings: 0
+MIPS_pipeline_tb.vhd:
+	errors: 0, warnings: 0
+WORKLIB.MIPS_PACKAGE (package):
+	streams: 1, words: 6
+WORKLIB.ALU (entity):
+	streams: 9, words: 908
+WORKLIB.ALU:BEHAVIORAL (architecture):
+	streams: 1, words: 873
+WORKLIB.HAZARDDETECTION_UNIT (entity):
+	streams: 11, words: 740
+WORKLIB.HAZARDDETECTION_UNIT:ARCH1 (architecture):
+	streams: 1, words: 114
+WORKLIB.BRANCHDETECTION_UNIT (entity):
+	streams: 5, words: 62
+WORKLIB.BRANCHDETECTION_UNIT:ARCH1 (architecture):
+	streams: 1, words: 114
+WORKLIB.STAGE_ID (entity):
+	streams: 13, words: 1245
+WORKLIB.STAGE_ID:BEHAVIORAL (architecture):
+	streams: 3, words: 3034
+WORKLIB.STAGE_EX (entity):
+	streams: 38, words: 4917
+WORKLIB.STAGE_EX:BEHAVIORAL (architecture):
+	streams: 9, words: 11888
+WORKLIB.STAGE_MEM (entity):
+	streams: 18, words: 2297
+WORKLIB.STAGE_MEM:BEHAVIORAL (architecture):
+	streams: 4, words: 4527
+WORKLIB.STAGE_WB (entity):
+	streams: 18, words: 2297
+WORKLIB.STAGE_WB:BEHAVIORAL (architecture):
+	streams: 4, words: 4527
+WORKLIB.DATAPATH (entity):
+	streams: 19, words: 2166
+WORKLIB.DATAPATH:STRUCTURAL (architecture):
+	streams: 11, words: 32511
+WORKLIB.CONTROLPATH (entity):
+	streams: 6, words: 639
+WORKLIB.CONTROLPATH:BEHAVIORAL (architecture):
+	streams: 1, words: 114
+WORKLIB.MIPS_PIPELINE (entity):
+	streams: 15, words: 1531
+WORKLIB.MIPS_PIPELINE:STRUCTURAL (architecture):
+	streams: 3, words: 3611
+WORKLIB.MIPS_PIPELINE_TB (entity):
+	streams: 1, words: 38
+WORKLIB.MIPS_PIPELINE_TB:STRUCTURAL (architecture):
+	streams: 4, words: 6433
+xmelab: *W,ARCMRA: Elaborating the WORKLIB.MIPS_PIPELINE_TB:STRUCTURAL, MRA (most recently analyzed) architecture.
+	Elaborating the design hierarchy:
+	Top level design units:
+		:mips_pipeline_tb(structural):
+	Building instance specific data structures.
+	Design hierarchy summary:
+		       Instances  Unique
+		Components:   65      15
+		Processes:   167      81
+		Signals:      91      88
+	Writing initial simulation snapshot: WORKLIB.MIPS_PIPELINE_TB:STRUCTURAL
+
+-------------------------------------
+Relinquished control to SimVision...
+xcelium> 
+xcelium> database -open waves -into waves.shm -default
+Created default SHM database waves
+xcelium> probe -create -shm :MIPS_PIPELINE:clock :MIPS_PIPELINE:data_i :MIPS_PIPELINE:data_o :MIPS_PIPELINE:dataAddress :MIPS_PIPELINE:instruction :MIPS_PIPELINE:instruction_1 :MIPS_PIPELINE:instructionAddress :MIPS_PIPELINE:MemWrite :MIPS_PIPELINE:PC_START_ADDRESS :MIPS_PIPELINE:reset :MIPS_PIPELINE:uins :MIPS_PIPELINE:DATA_PATH:uins_ID :MIPS_PIPELINE:DATA_PATH:uins_EX :MIPS_PIPELINE:DATA_PATH:uins_MEM :MIPS_PIPELINE:DATA_PATH:uins_WB :MIPS_PIPELINE:DATA_PATH:ALU:op1 :MIPS_PIPELINE:DATA_PATH:ALU:op2 :MIPS_PIPELINE:DATA_PATH:ALU:operand1 :MIPS_PIPELINE:DATA_PATH:ALU:operand2 :MIPS_PIPELINE:DATA_PATH:ALU:operation :MIPS_PIPELINE:DATA_PATH:ALU:result :MIPS_PIPELINE:DATA_PATH:ALU:temp :MIPS_PIPELINE:DATA_PATH:ALU:zero :MIPS_PIPELINE:DATA_PATH:BranchDetection_unit:Branch_ID :MIPS_PIPELINE:DATA_PATH:BranchDetection_unit:jump_ID :MIPS_PIPELINE:DATA_PATH:BranchDetection_unit:zero_branch :MIPS_PIPELINE:DATA_PATH:Forwarding_unit:Forward1 :MIPS_PIPELINE:DATA_PATH:Forwarding_unit:Forward2 :MIPS_PIPELINE:DATA_PATH:Forwarding_unit:ForwardA :MIPS_PIPELINE:DATA_PATH:Forwarding_unit:ForwardB :MIPS_PIPELINE:DATA_PATH:Forwarding_unit:ForwardWb_A :MIPS_PIPELINE:DATA_PATH:Forwarding_unit:ForwardWb_B :MIPS_PIPELINE:DATA_PATH:Forwarding_unit:RegWrite_stage_EX :MIPS_PIPELINE:DATA_PATH:Forwarding_unit:RegWrite_stage_MEM :MIPS_PIPELINE:DATA_PATH:Forwarding_unit:RegWrite_stage_WB :MIPS_PIPELINE:DATA_PATH:Forwarding_unit:rs_stage_EX :MIPS_PIPELINE:DATA_PATH:Forwarding_unit:rs_stage_ID :MIPS_PIPELINE:DATA_PATH:Forwarding_unit:rt_stage_EX :MIPS_PIPELINE:DATA_PATH:Forwarding_unit:rt_stage_ID :MIPS_PIPELINE:DATA_PATH:Forwarding_unit:WriteReg_stage_EX :MIPS_PIPELINE:DATA_PATH:Forwarding_unit:WriteReg_stage_MEM :MIPS_PIPELINE:DATA_PATH:Forwarding_unit:WriteReg_stage_WB :MIPS_PIPELINE:DATA_PATH:HazardDetection_unit:ce :MIPS_PIPELINE:DATA_PATH:HazardDetection_unit:ce_pc :MIPS_PIPELINE:DATA_PATH:HazardDetection_unit:ce_stage_ID :MIPS_PIPELINE:DATA_PATH:HazardDetection_unit:MemToReg_EX :MIPS_PIPELINE:DATA_PATH:HazardDetection_unit:rs_ID :MIPS_PIPELINE:DATA_PATH:HazardDetection_unit:rt_EX :MIPS_PIPELINE:DATA_PATH:HazardDetection_unit:rt_ID :DATA_MEMORY:address :DATA_MEMORY:clock :DATA_MEMORY:data_i :DATA_MEMORY:data_o :DATA_MEMORY:imageFileName :DATA_MEMORY:mappedAddress :DATA_MEMORY:memoryArray :DATA_MEMORY:MemWrite :DATA_MEMORY:SIZE :DATA_MEMORY:START_ADDRESS :DATA_MEMORY:wordAddress :INSTRUCTION_MEMORY:address :INSTRUCTION_MEMORY:clock :INSTRUCTION_MEMORY:data_i :INSTRUCTION_MEMORY:data_o :INSTRUCTION_MEMORY:imageFileName :INSTRUCTION_MEMORY:mappedAddress :INSTRUCTION_MEMORY:memoryArray :INSTRUCTION_MEMORY:MemWrite :INSTRUCTION_MEMORY:SIZE :INSTRUCTION_MEMORY:START_ADDRESS :INSTRUCTION_MEMORY:wordAddress :MIPS_PIPELINE:DATA_PATH:cicles
+Created probe 1
+xcelium> run 4000ns
+ASSERT/WARNING (time 0 FS) from package ieee.NUMERIC_STD, this builtin function called  from process :DATA_MEMORY:$PROCESS_002 (architecture worklib.Memory:behavioral)
+Built-in relational argument contains a ('U', 'X', 'W', 'Z', '-') in an operand.
+ASSERT/WARNING (time 0 FS) from package ieee.NUMERIC_STD, this builtin function called  from process :INSTRUCTION_MEMORY:$PROCESS_002 (architecture worklib.Memory:behavioral)
+Built-in relational argument contains a ('U', 'X', 'W', 'Z', '-') in an operand.
+ASSERT/WARNING (time 0 FS) from package ieee.NUMERIC_STD, this builtin function called  from process :MIPS_PIPELINE:DATA_PATH:ALU:$PROCESS_004 (architecture worklib.ALU:behavioral)
+Built-in relational argument contains a ('U', 'X', 'W', 'Z', '-') in an operand.
+ASSERT/WARNING (time 0 FS) from package ieee.NUMERIC_STD, this builtin function called  from process :MIPS_PIPELINE:DATA_PATH:REGISTER_FILE:$PROCESS_001 (architecture worklib.RegisterFile:structural)
+Built-in conversion function argument contains ('U', 'X', 'W', 'Z', '-') in an operand (treated as '0').
+ASSERT/WARNING (time 0 FS) from package ieee.NUMERIC_STD, this builtin function called  from process :MIPS_PIPELINE:DATA_PATH:REGISTER_FILE:$PROCESS_000 (architecture worklib.RegisterFile:structural)
+Built-in conversion function argument contains ('U', 'X', 'W', 'Z', '-') in an operand (treated as '0').
+ASSERT/WARNING (time 0 FS) from package ieee.NUMERIC_STD, this builtin function called  from process :MIPS_PIPELINE:DATA_PATH:REGISTER_FILE:Registers(1):$PROCESS_000 (architecture worklib.RegisterFile:structural)
+Built-in relational argument contains a ('U', 'X', 'W', 'Z', '-') in an operand.
+ASSERT/WARNING (time 0 FS) from package ieee.NUMERIC_STD, this builtin function called  from process :MIPS_PIPELINE:DATA_PATH:REGISTER_FILE:Registers(2):$PROCESS_000 (architecture worklib.RegisterFile:structural)
+Built-in relational argument contains a ('U', 'X', 'W', 'Z', '-') in an operand.
+ASSERT/WARNING (time 0 FS) from package ieee.NUMERIC_STD, this builtin function called  from process :MIPS_PIPELINE:DATA_PATH:REGISTER_FILE:Registers(3):$PROCESS_000 (architecture worklib.RegisterFile:structural)
+Built-in relational argument contains a ('U', 'X', 'W', 'Z', '-') in an operand.
+ASSERT/WARNING (time 0 FS) from package ieee.NUMERIC_STD, this builtin function called  from process :MIPS_PIPELINE:DATA_PATH:REGISTER_FILE:Registers(4):$PROCESS_000 (architecture worklib.RegisterFile:structural)
+Built-in relational argument contains a ('U', 'X', 'W', 'Z', '-') in an operand.
+ASSERT/WARNING (time 0 FS) from package ieee.NUMERIC_STD, this builtin function called  from process :MIPS_PIPELINE:DATA_PATH:REGISTER_FILE:Registers(5):$PROCESS_000 (architecture worklib.RegisterFile:structural)
+Built-in relational argument contains a ('U', 'X', 'W', 'Z', '-') in an operand.
+ASSERT/WARNING (time 0 FS) from package ieee.NUMERIC_STD, this builtin function called  from process :MIPS_PIPELINE:DATA_PATH:REGISTER_FILE:Registers(6):$PROCESS_000 (architecture worklib.RegisterFile:structural)
+Built-in relational argument contains a ('U', 'X', 'W', 'Z', '-') in an operand.
+ASSERT/WARNING (time 0 FS) from package ieee.NUMERIC_STD, this builtin function called  from process :MIPS_PIPELINE:DATA_PATH:REGISTER_FILE:Registers(7):$PROCESS_000 (architecture worklib.RegisterFile:structural)
+Built-in relational argument contains a ('U', 'X', 'W', 'Z', '-') in an operand.
+ASSERT/WARNING (time 0 FS) from package ieee.NUMERIC_STD, this builtin function called  from process :MIPS_PIPELINE:DATA_PATH:REGISTER_FILE:Registers(8):$PROCESS_000 (architecture worklib.RegisterFile:structural)
+Built-in relational argument contains a ('U', 'X', 'W', 'Z', '-') in an operand.
+ASSERT/WARNING (time 0 FS) from package ieee.NUMERIC_STD, this builtin function called  from process :MIPS_PIPELINE:DATA_PATH:REGISTER_FILE:Registers(9):$PROCESS_000 (architecture worklib.RegisterFile:structural)
+Built-in relational argument contains a ('U', 'X', 'W', 'Z', '-') in an operand.
+ASSERT/WARNING (time 0 FS) from package ieee.NUMERIC_STD, this builtin function called  from process :MIPS_PIPELINE:DATA_PATH:REGISTER_FILE:Registers(10):$PROCESS_000 (architecture worklib.RegisterFile:structural)
+Built-in relational argument contains a ('U', 'X', 'W', 'Z', '-') in an operand.
+ASSERT/WARNING (time 0 FS) from package ieee.NUMERIC_STD, this builtin function called  from process :MIPS_PIPELINE:DATA_PATH:REGISTER_FILE:Registers(11):$PROCESS_000 (architecture worklib.RegisterFile:structural)
+Built-in relational argument contains a ('U', 'X', 'W', 'Z', '-') in an operand.
+ASSERT/WARNING (time 0 FS) from package ieee.NUMERIC_STD, this builtin function called  from process :MIPS_PIPELINE:DATA_PATH:REGISTER_FILE:Registers(12):$PROCESS_000 (architecture worklib.RegisterFile:structural)
+Built-in relational argument contains a ('U', 'X', 'W', 'Z', '-') in an operand.
+ASSERT/WARNING (time 0 FS) from package ieee.NUMERIC_STD, this builtin function called  from process :MIPS_PIPELINE:DATA_PATH:REGISTER_FILE:Registers(13):$PROCESS_000 (architecture worklib.RegisterFile:structural)
+Built-in relational argument contains a ('U', 'X', 'W', 'Z', '-') in an operand.
+ASSERT/WARNING (time 0 FS) from package ieee.NUMERIC_STD, this builtin function called  from process :MIPS_PIPELINE:DATA_PATH:REGISTER_FILE:Registers(14):$PROCESS_000 (architecture worklib.RegisterFile:structural)
+Built-in relational argument contains a ('U', 'X', 'W', 'Z', '-') in an operand.
+ASSERT/WARNING (time 0 FS) from package ieee.NUMERIC_STD, this builtin function called  from process :MIPS_PIPELINE:DATA_PATH:REGISTER_FILE:Registers(15):$PROCESS_000 (architecture worklib.RegisterFile:structural)
+Built-in relational argument contains a ('U', 'X', 'W', 'Z', '-') in an operand.
+ASSERT/WARNING (time 0 FS) from package ieee.NUMERIC_STD, this builtin function called  from process :MIPS_PIPELINE:DATA_PATH:REGISTER_FILE:Registers(16):$PROCESS_000 (architecture worklib.RegisterFile:structural)
+Built-in relational argument contains a ('U', 'X', 'W', 'Z', '-') in an operand.
+ASSERT/WARNING (time 0 FS) from package ieee.NUMERIC_STD, this builtin function called  from process :MIPS_PIPELINE:DATA_PATH:REGISTER_FILE:Registers(17):$PROCESS_000 (architecture worklib.RegisterFile:structural)
+Built-in relational argument contains a ('U', 'X', 'W', 'Z', '-') in an operand.
+ASSERT/WARNING (time 0 FS) from package ieee.NUMERIC_STD, this builtin function called  from process :MIPS_PIPELINE:DATA_PATH:REGISTER_FILE:Registers(18):$PROCESS_000 (architecture worklib.RegisterFile:structural)
+Built-in relational argument contains a ('U', 'X', 'W', 'Z', '-') in an operand.
+ASSERT/WARNING (time 0 FS) from package ieee.NUMERIC_STD, this builtin function called  from process :MIPS_PIPELINE:DATA_PATH:REGISTER_FILE:Registers(19):$PROCESS_000 (architecture worklib.RegisterFile:structural)
+Built-in relational argument contains a ('U', 'X', 'W', 'Z', '-') in an operand.
+ASSERT/WARNING (time 0 FS) from package ieee.NUMERIC_STD, this builtin function called  from process :MIPS_PIPELINE:DATA_PATH:REGISTER_FILE:Registers(20):$PROCESS_000 (architecture worklib.RegisterFile:structural)
+Built-in relational argument contains a ('U', 'X', 'W', 'Z', '-') in an operand.
+ASSERT/WARNING (time 0 FS) from package ieee.NUMERIC_STD, this builtin function called  from process :MIPS_PIPELINE:DATA_PATH:REGISTER_FILE:Registers(21):$PROCESS_000 (architecture worklib.RegisterFile:structural)
+Built-in relational argument contains a ('U', 'X', 'W', 'Z', '-') in an operand.
+ASSERT/WARNING (time 0 FS) from package ieee.NUMERIC_STD, this builtin function called  from process :MIPS_PIPELINE:DATA_PATH:REGISTER_FILE:Registers(22):$PROCESS_000 (architecture worklib.RegisterFile:structural)
+Built-in relational argument contains a ('U', 'X', 'W', 'Z', '-') in an operand.
+ASSERT/WARNING (time 0 FS) from package ieee.NUMERIC_STD, this builtin function called  from process :MIPS_PIPELINE:DATA_PATH:REGISTER_FILE:Registers(23):$PROCESS_000 (architecture worklib.RegisterFile:structural)
+Built-in relational argument contains a ('U', 'X', 'W', 'Z', '-') in an operand.
+ASSERT/WARNING (time 0 FS) from package ieee.NUMERIC_STD, this builtin function called  from process :MIPS_PIPELINE:DATA_PATH:REGISTER_FILE:Registers(24):$PROCESS_000 (architecture worklib.RegisterFile:structural)
+Built-in relational argument contains a ('U', 'X', 'W', 'Z', '-') in an operand.
+ASSERT/WARNING (time 0 FS) from package ieee.NUMERIC_STD, this builtin function called  from process :MIPS_PIPELINE:DATA_PATH:REGISTER_FILE:Registers(25):$PROCESS_000 (architecture worklib.RegisterFile:structural)
+Built-in relational argument contains a ('U', 'X', 'W', 'Z', '-') in an operand.
+ASSERT/WARNING (time 0 FS) from package ieee.NUMERIC_STD, this builtin function called  from process :MIPS_PIPELINE:DATA_PATH:REGISTER_FILE:Registers(26):$PROCESS_000 (architecture worklib.RegisterFile:structural)
+Built-in relational argument contains a ('U', 'X', 'W', 'Z', '-') in an operand.
+ASSERT/WARNING (time 0 FS) from package ieee.NUMERIC_STD, this builtin function called  from process :MIPS_PIPELINE:DATA_PATH:REGISTER_FILE:Registers(27):$PROCESS_000 (architecture worklib.RegisterFile:structural)
+Built-in relational argument contains a ('U', 'X', 'W', 'Z', '-') in an operand.
+ASSERT/WARNING (time 0 FS) from package ieee.NUMERIC_STD, this builtin function called  from process :MIPS_PIPELINE:DATA_PATH:REGISTER_FILE:Registers(28):$PROCESS_000 (architecture worklib.RegisterFile:structural)
+Built-in relational argument contains a ('U', 'X', 'W', 'Z', '-') in an operand.
+ASSERT/WARNING (time 0 FS) from package ieee.NUMERIC_STD, this builtin function called  from process :MIPS_PIPELINE:DATA_PATH:REGISTER_FILE:Registers(29):$PROCESS_000 (architecture worklib.RegisterFile:structural)
+Built-in relational argument contains a ('U', 'X', 'W', 'Z', '-') in an operand.
+ASSERT/WARNING (time 0 FS) from package ieee.NUMERIC_STD, this builtin function called  from process :MIPS_PIPELINE:DATA_PATH:REGISTER_FILE:Registers(30):$PROCESS_000 (architecture worklib.RegisterFile:structural)
+Built-in relational argument contains a ('U', 'X', 'W', 'Z', '-') in an operand.
+ASSERT/WARNING (time 0 FS) from package ieee.NUMERIC_STD, this builtin function called  from process :MIPS_PIPELINE:DATA_PATH:REGISTER_FILE:Registers(31):$PROCESS_000 (architecture worklib.RegisterFile:structural)
+Built-in relational argument contains a ('U', 'X', 'W', 'Z', '-') in an operand.
+ASSERT/WARNING (time 0 FS) from package ieee.NUMERIC_STD, this builtin function called  from process :MIPS_PIPELINE:DATA_PATH:ALU:$PROCESS_004 (architecture worklib.ALU:behavioral)
+Built-in relational argument contains a ('U', 'X', 'W', 'Z', '-') in an operand.
+ASSERT/WARNING (time 0 FS) from package ieee.NUMERIC_STD, this builtin function called  from process :INSTRUCTION_MEMORY:$PROCESS_002 (architecture worklib.Memory:behavioral)
+Built-in relational argument contains a ('U', 'X', 'W', 'Z', '-') in an operand.
+ASSERT/WARNING (time 0 FS) from package ieee.NUMERIC_STD, this builtin function called  from process :DATA_MEMORY:$PROCESS_002 (architecture worklib.Memory:behavioral)
+Built-in relational argument contains a ('U', 'X', 'W', 'Z', '-') in an operand.
+ASSERT/WARNING (time 0 FS) from package ieee.NUMERIC_STD, this builtin function called  from process :DATA_MEMORY:$PROCESS_002 (architecture worklib.Memory:behavioral)
+Built-in relational argument contains a ('U', 'X', 'W', 'Z', '-') in an operand.
+ASSERT/WARNING (time 0 FS) from package ieee.NUMERIC_STD, this builtin function called  from process :INSTRUCTION_MEMORY:$PROCESS_002 (architecture worklib.Memory:behavioral)
+Built-in relational argument contains a ('U', 'X', 'W', 'Z', '-') in an operand.
+ASSERT/WARNING (time 0 FS) from package ieee.NUMERIC_STD, this builtin function called  from process :MIPS_PIPELINE:DATA_PATH:REGISTER_FILE:$PROCESS_001 (architecture worklib.RegisterFile:structural)
+Built-in conversion function argument contains ('U', 'X', 'W', 'Z', '-') in an operand (treated as '0').
+ASSERT/WARNING (time 0 FS) from package ieee.NUMERIC_STD, this builtin function called  from process :MIPS_PIPELINE:DATA_PATH:REGISTER_FILE:$PROCESS_000 (architecture worklib.RegisterFile:structural)
+Built-in conversion function argument contains ('U', 'X', 'W', 'Z', '-') in an operand (treated as '0').
+Ran until 4 US + 0
+xcelium> probe -create -shm :MIPS_PIPELINE:DATA_PATH:instruction_Stage_IF
+Created probe 2
+xcelium> reset
+Loaded snapshot worklib.mips_pipeline_tb:structural
+xcelium> run 4000ns
+ASSERT/WARNING (time 0 FS) from package ieee.NUMERIC_STD, this builtin function called  from process :DATA_MEMORY:$PROCESS_002 (architecture worklib.Memory:behavioral)
+Built-in relational argument contains a ('U', 'X', 'W', 'Z', '-') in an operand.
+ASSERT/WARNING (time 0 FS) from package ieee.NUMERIC_STD, this builtin function called  from process :INSTRUCTION_MEMORY:$PROCESS_002 (architecture worklib.Memory:behavioral)
+Built-in relational argument contains a ('U', 'X', 'W', 'Z', '-') in an operand.
+ASSERT/WARNING (time 0 FS) from package ieee.NUMERIC_STD, this builtin function called  from process :MIPS_PIPELINE:DATA_PATH:ALU:$PROCESS_004 (architecture worklib.ALU:behavioral)
+Built-in relational argument contains a ('U', 'X', 'W', 'Z', '-') in an operand.
+ASSERT/WARNING (time 0 FS) from package ieee.NUMERIC_STD, this builtin function called  from process :MIPS_PIPELINE:DATA_PATH:REGISTER_FILE:$PROCESS_001 (architecture worklib.RegisterFile:structural)
+Built-in conversion function argument contains ('U', 'X', 'W', 'Z', '-') in an operand (treated as '0').
+ASSERT/WARNING (time 0 FS) from package ieee.NUMERIC_STD, this builtin function called  from process :MIPS_PIPELINE:DATA_PATH:REGISTER_FILE:$PROCESS_000 (architecture worklib.RegisterFile:structural)
+Built-in conversion function argument contains ('U', 'X', 'W', 'Z', '-') in an operand (treated as '0').
+ASSERT/WARNING (time 0 FS) from package ieee.NUMERIC_STD, this builtin function called  from process :MIPS_PIPELINE:DATA_PATH:REGISTER_FILE:Registers(1):$PROCESS_000 (architecture worklib.RegisterFile:structural)
+Built-in relational argument contains a ('U', 'X', 'W', 'Z', '-') in an operand.
+ASSERT/WARNING (time 0 FS) from package ieee.NUMERIC_STD, this builtin function called  from process :MIPS_PIPELINE:DATA_PATH:REGISTER_FILE:Registers(2):$PROCESS_000 (architecture worklib.RegisterFile:structural)
+Built-in relational argument contains a ('U', 'X', 'W', 'Z', '-') in an operand.
+ASSERT/WARNING (time 0 FS) from package ieee.NUMERIC_STD, this builtin function called  from process :MIPS_PIPELINE:DATA_PATH:REGISTER_FILE:Registers(3):$PROCESS_000 (architecture worklib.RegisterFile:structural)
+Built-in relational argument contains a ('U', 'X', 'W', 'Z', '-') in an operand.
+ASSERT/WARNING (time 0 FS) from package ieee.NUMERIC_STD, this builtin function called  from process :MIPS_PIPELINE:DATA_PATH:REGISTER_FILE:Registers(4):$PROCESS_000 (architecture worklib.RegisterFile:structural)
+Built-in relational argument contains a ('U', 'X', 'W', 'Z', '-') in an operand.
+ASSERT/WARNING (time 0 FS) from package ieee.NUMERIC_STD, this builtin function called  from process :MIPS_PIPELINE:DATA_PATH:REGISTER_FILE:Registers(5):$PROCESS_000 (architecture worklib.RegisterFile:structural)
+Built-in relational argument contains a ('U', 'X', 'W', 'Z', '-') in an operand.
+ASSERT/WARNING (time 0 FS) from package ieee.NUMERIC_STD, this builtin function called  from process :MIPS_PIPELINE:DATA_PATH:REGISTER_FILE:Registers(6):$PROCESS_000 (architecture worklib.RegisterFile:structural)
+Built-in relational argument contains a ('U', 'X', 'W', 'Z', '-') in an operand.
+ASSERT/WARNING (time 0 FS) from package ieee.NUMERIC_STD, this builtin function called  from process :MIPS_PIPELINE:DATA_PATH:REGISTER_FILE:Registers(7):$PROCESS_000 (architecture worklib.RegisterFile:structural)
+Built-in relational argument contains a ('U', 'X', 'W', 'Z', '-') in an operand.
+ASSERT/WARNING (time 0 FS) from package ieee.NUMERIC_STD, this builtin function called  from process :MIPS_PIPELINE:DATA_PATH:REGISTER_FILE:Registers(8):$PROCESS_000 (architecture worklib.RegisterFile:structural)
+Built-in relational argument contains a ('U', 'X', 'W', 'Z', '-') in an operand.
+ASSERT/WARNING (time 0 FS) from package ieee.NUMERIC_STD, this builtin function called  from process :MIPS_PIPELINE:DATA_PATH:REGISTER_FILE:Registers(9):$PROCESS_000 (architecture worklib.RegisterFile:structural)
+Built-in relational argument contains a ('U', 'X', 'W', 'Z', '-') in an operand.
+ASSERT/WARNING (time 0 FS) from package ieee.NUMERIC_STD, this builtin function called  from process :MIPS_PIPELINE:DATA_PATH:REGISTER_FILE:Registers(10):$PROCESS_000 (architecture worklib.RegisterFile:structural)
+Built-in relational argument contains a ('U', 'X', 'W', 'Z', '-') in an operand.
+ASSERT/WARNING (time 0 FS) from package ieee.NUMERIC_STD, this builtin function called  from process :MIPS_PIPELINE:DATA_PATH:REGISTER_FILE:Registers(11):$PROCESS_000 (architecture worklib.RegisterFile:structural)
+Built-in relational argument contains a ('U', 'X', 'W', 'Z', '-') in an operand.
+ASSERT/WARNING (time 0 FS) from package ieee.NUMERIC_STD, this builtin function called  from process :MIPS_PIPELINE:DATA_PATH:REGISTER_FILE:Registers(12):$PROCESS_000 (architecture worklib.RegisterFile:structural)
+Built-in relational argument contains a ('U', 'X', 'W', 'Z', '-') in an operand.
+ASSERT/WARNING (time 0 FS) from package ieee.NUMERIC_STD, this builtin function called  from process :MIPS_PIPELINE:DATA_PATH:REGISTER_FILE:Registers(13):$PROCESS_000 (architecture worklib.RegisterFile:structural)
+Built-in relational argument contains a ('U', 'X', 'W', 'Z', '-') in an operand.
+ASSERT/WARNING (time 0 FS) from package ieee.NUMERIC_STD, this builtin function called  from process :MIPS_PIPELINE:DATA_PATH:REGISTER_FILE:Registers(14):$PROCESS_000 (architecture worklib.RegisterFile:structural)
+Built-in relational argument contains a ('U', 'X', 'W', 'Z', '-') in an operand.
+ASSERT/WARNING (time 0 FS) from package ieee.NUMERIC_STD, this builtin function called  from process :MIPS_PIPELINE:DATA_PATH:REGISTER_FILE:Registers(15):$PROCESS_000 (architecture worklib.RegisterFile:structural)
+Built-in relational argument contains a ('U', 'X', 'W', 'Z', '-') in an operand.
+ASSERT/WARNING (time 0 FS) from package ieee.NUMERIC_STD, this builtin function called  from process :MIPS_PIPELINE:DATA_PATH:REGISTER_FILE:Registers(16):$PROCESS_000 (architecture worklib.RegisterFile:structural)
+Built-in relational argument contains a ('U', 'X', 'W', 'Z', '-') in an operand.
+ASSERT/WARNING (time 0 FS) from package ieee.NUMERIC_STD, this builtin function called  from process :MIPS_PIPELINE:DATA_PATH:REGISTER_FILE:Registers(17):$PROCESS_000 (architecture worklib.RegisterFile:structural)
+Built-in relational argument contains a ('U', 'X', 'W', 'Z', '-') in an operand.
+ASSERT/WARNING (time 0 FS) from package ieee.NUMERIC_STD, this builtin function called  from process :MIPS_PIPELINE:DATA_PATH:REGISTER_FILE:Registers(18):$PROCESS_000 (architecture worklib.RegisterFile:structural)
+Built-in relational argument contains a ('U', 'X', 'W', 'Z', '-') in an operand.
+ASSERT/WARNING (time 0 FS) from package ieee.NUMERIC_STD, this builtin function called  from process :MIPS_PIPELINE:DATA_PATH:REGISTER_FILE:Registers(19):$PROCESS_000 (architecture worklib.RegisterFile:structural)
+Built-in relational argument contains a ('U', 'X', 'W', 'Z', '-') in an operand.
+ASSERT/WARNING (time 0 FS) from package ieee.NUMERIC_STD, this builtin function called  from process :MIPS_PIPELINE:DATA_PATH:REGISTER_FILE:Registers(20):$PROCESS_000 (architecture worklib.RegisterFile:structural)
+Built-in relational argument contains a ('U', 'X', 'W', 'Z', '-') in an operand.
+ASSERT/WARNING (time 0 FS) from package ieee.NUMERIC_STD, this builtin function called  from process :MIPS_PIPELINE:DATA_PATH:REGISTER_FILE:Registers(21):$PROCESS_000 (architecture worklib.RegisterFile:structural)
+Built-in relational argument contains a ('U', 'X', 'W', 'Z', '-') in an operand.
+ASSERT/WARNING (time 0 FS) from package ieee.NUMERIC_STD, this builtin function called  from process :MIPS_PIPELINE:DATA_PATH:REGISTER_FILE:Registers(22):$PROCESS_000 (architecture worklib.RegisterFile:structural)
+Built-in relational argument contains a ('U', 'X', 'W', 'Z', '-') in an operand.
+ASSERT/WARNING (time 0 FS) from package ieee.NUMERIC_STD, this builtin function called  from process :MIPS_PIPELINE:DATA_PATH:REGISTER_FILE:Registers(23):$PROCESS_000 (architecture worklib.RegisterFile:structural)
+Built-in relational argument contains a ('U', 'X', 'W', 'Z', '-') in an operand.
+ASSERT/WARNING (time 0 FS) from package ieee.NUMERIC_STD, this builtin function called  from process :MIPS_PIPELINE:DATA_PATH:REGISTER_FILE:Registers(24):$PROCESS_000 (architecture worklib.RegisterFile:structural)
+Built-in relational argument contains a ('U', 'X', 'W', 'Z', '-') in an operand.
+ASSERT/WARNING (time 0 FS) from package ieee.NUMERIC_STD, this builtin function called  from process :MIPS_PIPELINE:DATA_PATH:REGISTER_FILE:Registers(25):$PROCESS_000 (architecture worklib.RegisterFile:structural)
+Built-in relational argument contains a ('U', 'X', 'W', 'Z', '-') in an operand.
+ASSERT/WARNING (time 0 FS) from package ieee.NUMERIC_STD, this builtin function called  from process :MIPS_PIPELINE:DATA_PATH:REGISTER_FILE:Registers(26):$PROCESS_000 (architecture worklib.RegisterFile:structural)
+Built-in relational argument contains a ('U', 'X', 'W', 'Z', '-') in an operand.
+ASSERT/WARNING (time 0 FS) from package ieee.NUMERIC_STD, this builtin function called  from process :MIPS_PIPELINE:DATA_PATH:REGISTER_FILE:Registers(27):$PROCESS_000 (architecture worklib.RegisterFile:structural)
+Built-in relational argument contains a ('U', 'X', 'W', 'Z', '-') in an operand.
+ASSERT/WARNING (time 0 FS) from package ieee.NUMERIC_STD, this builtin function called  from process :MIPS_PIPELINE:DATA_PATH:REGISTER_FILE:Registers(28):$PROCESS_000 (architecture worklib.RegisterFile:structural)
+Built-in relational argument contains a ('U', 'X', 'W', 'Z', '-') in an operand.
+ASSERT/WARNING (time 0 FS) from package ieee.NUMERIC_STD, this builtin function called  from process :MIPS_PIPELINE:DATA_PATH:REGISTER_FILE:Registers(29):$PROCESS_000 (architecture worklib.RegisterFile:structural)
+Built-in relational argument contains a ('U', 'X', 'W', 'Z', '-') in an operand.
+ASSERT/WARNING (time 0 FS) from package ieee.NUMERIC_STD, this builtin function called  from process :MIPS_PIPELINE:DATA_PATH:REGISTER_FILE:Registers(30):$PROCESS_000 (architecture worklib.RegisterFile:structural)
+Built-in relational argument contains a ('U', 'X', 'W', 'Z', '-') in an operand.
+ASSERT/WARNING (time 0 FS) from package ieee.NUMERIC_STD, this builtin function called  from process :MIPS_PIPELINE:DATA_PATH:REGISTER_FILE:Registers(31):$PROCESS_000 (architecture worklib.RegisterFile:structural)
+Built-in relational argument contains a ('U', 'X', 'W', 'Z', '-') in an operand.
+ASSERT/WARNING (time 0 FS) from package ieee.NUMERIC_STD, this builtin function called  from process :MIPS_PIPELINE:DATA_PATH:ALU:$PROCESS_004 (architecture worklib.ALU:behavioral)
+Built-in relational argument contains a ('U', 'X', 'W', 'Z', '-') in an operand.
+ASSERT/WARNING (time 0 FS) from package ieee.NUMERIC_STD, this builtin function called  from process :INSTRUCTION_MEMORY:$PROCESS_002 (architecture worklib.Memory:behavioral)
+Built-in relational argument contains a ('U', 'X', 'W', 'Z', '-') in an operand.
+ASSERT/WARNING (time 0 FS) from package ieee.NUMERIC_STD, this builtin function called  from process :DATA_MEMORY:$PROCESS_002 (architecture worklib.Memory:behavioral)
+Built-in relational argument contains a ('U', 'X', 'W', 'Z', '-') in an operand.
+ASSERT/WARNING (time 0 FS) from package ieee.NUMERIC_STD, this builtin function called  from process :DATA_MEMORY:$PROCESS_002 (architecture worklib.Memory:behavioral)
+Built-in relational argument contains a ('U', 'X', 'W', 'Z', '-') in an operand.
+ASSERT/WARNING (time 0 FS) from package ieee.NUMERIC_STD, this builtin function called  from process :INSTRUCTION_MEMORY:$PROCESS_002 (architecture worklib.Memory:behavioral)
+Built-in relational argument contains a ('U', 'X', 'W', 'Z', '-') in an operand.
+ASSERT/WARNING (time 0 FS) from package ieee.NUMERIC_STD, this builtin function called  from process :MIPS_PIPELINE:DATA_PATH:REGISTER_FILE:$PROCESS_001 (architecture worklib.RegisterFile:structural)
+Built-in conversion function argument contains ('U', 'X', 'W', 'Z', '-') in an operand (treated as '0').
+ASSERT/WARNING (time 0 FS) from package ieee.NUMERIC_STD, this builtin function called  from process :MIPS_PIPELINE:DATA_PATH:REGISTER_FILE:$PROCESS_000 (architecture worklib.RegisterFile:structural)
+Built-in conversion function argument contains ('U', 'X', 'W', 'Z', '-') in an operand (treated as '0').
+Ran until 4 US + 0
+xcelium> ^C
+xcelium> exit
+...Regained control from SimVision
+-------------------------------------
+TOOL:	xrun	19.09-s005: Exiting on Nov 12, 2024 at 10:08:41 -03  (total: 00:02:05)

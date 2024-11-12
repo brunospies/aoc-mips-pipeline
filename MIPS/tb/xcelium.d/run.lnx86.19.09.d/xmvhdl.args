@@ -1,0 +1,31 @@
+//
+// File created by:  xrun
+// Do not modify this file
+//
+-XLMODE
+./xcelium.d/run.lnx86.19.09.d
+-RUNMODE
+-V200X
+Util_package.vhd
+../rtl/MIPS_package.vhd
+../rtl/ALU.vhd
+../rtl/RegisterNbits.vhd
+../rtl/Forwarding_unit.vhd
+../rtl/HazardDetection_unit.vhd
+../rtl/BranchDetection_unit.vhd
+../rtl/RegisterFile.vhd
+../rtl/Stage_ID.vhd
+../rtl/Stage_EX.vhd
+../rtl/Stage_MEM.vhd
+../rtl/Stage_WB.vhd
+../rtl/DataPath.vhd
+../rtl/ControlPath.vhd
+../rtl/MIPS_pipeline.vhd
+Memory.vhd
+MIPS_pipeline_tb.vhd
+-CDSLIB
+./xcelium.d/run.lnx86.19.09.d/cdsrun.lib
+-HDLVAR
+./xcelium.d/run.lnx86.19.09.d/hdlrun.var
+-MESSAGES
+-UPDATE

@@ -22,7 +22,6 @@ package MIPS_package is
         instruction : Instruction_type; -- Decoded instruction            
     end record;
          
-         
 end MIPS_package;
 
 

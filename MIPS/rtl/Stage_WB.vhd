@@ -78,7 +78,7 @@ begin
     process(clock, reset)
     begin
         if reset = '1' then
-            uins_out.instruction <= BUBBLE;
+            uins_out.instruction <= INVALID_INSTRUCTION;
 	        uins_out.RegWrite  <= '0';
             uins_out.MemToReg  <= '0';
             uins_out.MemWrite  <= '0';   

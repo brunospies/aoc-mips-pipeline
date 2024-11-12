@@ -1,0 +1,21 @@
+//
+// File created by:  xrun
+// Do not modify this file
+//
+/home/desenvolvimento/Documents/Disciplinas/6_Semestre/Arq_Org_III/aoc-mips-pipeline/MIPS/tb/Util_package.vhd
+/home/desenvolvimento/Documents/Disciplinas/6_Semestre/Arq_Org_III/aoc-mips-pipeline/MIPS/rtl/MIPS_package.vhd
+/home/desenvolvimento/Documents/Disciplinas/6_Semestre/Arq_Org_III/aoc-mips-pipeline/MIPS/rtl/ALU.vhd
+/home/desenvolvimento/Documents/Disciplinas/6_Semestre/Arq_Org_III/aoc-mips-pipeline/MIPS/rtl/RegisterNbits.vhd
+/home/desenvolvimento/Documents/Disciplinas/6_Semestre/Arq_Org_III/aoc-mips-pipeline/MIPS/rtl/Forwarding_unit.vhd
+/home/desenvolvimento/Documents/Disciplinas/6_Semestre/Arq_Org_III/aoc-mips-pipeline/MIPS/rtl/HazardDetection_unit.vhd
+/home/desenvolvimento/Documents/Disciplinas/6_Semestre/Arq_Org_III/aoc-mips-pipeline/MIPS/rtl/BranchDetection_unit.vhd
+/home/desenvolvimento/Documents/Disciplinas/6_Semestre/Arq_Org_III/aoc-mips-pipeline/MIPS/rtl/RegisterFile.vhd
+/home/desenvolvimento/Documents/Disciplinas/6_Semestre/Arq_Org_III/aoc-mips-pipeline/MIPS/rtl/Stage_ID.vhd
+/home/desenvolvimento/Documents/Disciplinas/6_Semestre/Arq_Org_III/aoc-mips-pipeline/MIPS/rtl/Stage_EX.vhd
+/home/desenvolvimento/Documents/Disciplinas/6_Semestre/Arq_Org_III/aoc-mips-pipeline/MIPS/rtl/Stage_MEM.vhd
+/home/desenvolvimento/Documents/Disciplinas/6_Semestre/Arq_Org_III/aoc-mips-pipeline/MIPS/rtl/Stage_WB.vhd
+/home/desenvolvimento/Documents/Disciplinas/6_Semestre/Arq_Org_III/aoc-mips-pipeline/MIPS/rtl/DataPath.vhd
+/home/desenvolvimento/Documents/Disciplinas/6_Semestre/Arq_Org_III/aoc-mips-pipeline/MIPS/rtl/ControlPath.vhd
+/home/desenvolvimento/Documents/Disciplinas/6_Semestre/Arq_Org_III/aoc-mips-pipeline/MIPS/rtl/MIPS_pipeline.vhd
+/home/desenvolvimento/Documents/Disciplinas/6_Semestre/Arq_Org_III/aoc-mips-pipeline/MIPS/tb/Memory.vhd
+/home/desenvolvimento/Documents/Disciplinas/6_Semestre/Arq_Org_III/aoc-mips-pipeline/MIPS/tb/MIPS_pipeline_tb.vhd

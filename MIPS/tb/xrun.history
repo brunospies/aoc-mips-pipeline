@@ -1,0 +1,5 @@
+s1(07Nov2024:17:45:30):  xrun -v200x -gui -f filelist.txt -top MIPS_pipeline_tb -access +rwc -gui 
+s2(12Nov2024:10:03:04):  xrun -v200x -gui -f filelist.txt -top MIPS_pipeline_tb -access +rwc -gui 
+s3(12Nov2024:10:03:28):  xrun -v200x -gui -f filelist.txt -top MIPS_pipeline_tb -access +rwc -gui 
+s4(12Nov2024:10:05:58):  xrun -v200x -gui -f filelist.txt -top MIPS_pipeline_tb -access +rwc -gui 
+s5(12Nov2024:10:06:37):  xrun -v200x -gui -f filelist.txt -top MIPS_pipeline_tb -access +rwc -gui 
