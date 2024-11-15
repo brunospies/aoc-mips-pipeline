@@ -14,7 +14,11 @@ entity Branch_predictor is
         pc_ex           : in std_logic_vector(31 downto 0);
         pc_cal          : in std_logic_vector(31 downto 0);
         pc_predict      : out std_logic_vector(31 downto 0);
-        predict_if      : out std_logic
+        predict_if      : out std_logic;
+        br_test         : out std_logic_vector(31 downto 0);
+        predict_branch_test : out std_logic_vector(1 downto 0);
+        tag_memory_table_test : out std_logic_vector(19 downto 0);
+        valid_index_test : out std_logic
     );
 end Branch_predictor;
 
@@ -64,9 +68,16 @@ begin
                 tag_memory_table(to_integer(unsigned(index_ex))) <= tag_pc_ex;
                 predict_branch(to_integer(unsigned(index_ex))) <= new_predict_branch(to_integer(unsigned(index_ex)));
                 valid_index(to_integer(unsigned(index_ex))) <= '1';
+
+                -- Tests
+                br_test <= br(to_integer(unsigned(index_ex)));
+                tag_memory_table_test <= tag_memory_table(to_integer(unsigned(index_ex)));
+                valid_index_test <= valid_index(to_integer(unsigned(index_ex)));
             end if;
         end if;
     end process;  
+
+
 
     -- Process to update prediction FSM
     process(clock)
