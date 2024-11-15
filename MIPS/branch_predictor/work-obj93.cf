@@ -1,0 +1,7 @@
+v 4
+file . "Branch_predictor_tb.vhd" "f0835dfac1615cb193a2c5f42a8613b1e7b8f80f" "20241114181040.974":
+  entity tb_branch_predictor at 1( 0) + 0 on 73;
+  architecture test of tb_branch_predictor at 8( 126) + 0 on 74;
+file . "Branch_predictor.vhd" "e022218ca8aa6db2d082f6d8f42d03224a01114e" "20241114181040.972":
+  entity branch_predictor at 1( 0) + 0 on 71;
+  architecture behavioral of branch_predictor at 25( 890) + 0 on 72;
