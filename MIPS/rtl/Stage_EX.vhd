@@ -19,9 +19,7 @@ entity Stage_EX is
         read_data_1_in        : in  std_logic_vector(31 downto 0);  
         read_data_1_out       : out std_logic_vector(31 downto 0); 
 	    read_data_2_in        : in  std_logic_vector(31 downto 0);  
-        read_data_2_out       : out std_logic_vector(31 downto 0); 
-	    incremented_pc_in     : in  std_logic_vector(31 downto 0);  
-        incremented_pc_out    : out std_logic_vector(31 downto 0);
+        read_data_2_out       : out std_logic_vector(31 downto 0);
         imediate_extended_in  : in  std_logic_vector(31 downto 0); 
         imediate_extended_out : out std_logic_vector(31 downto 0);
 	    zero_extended_in      : in  std_logic_vector(31 downto 0);
@@ -68,20 +66,6 @@ begin
             ce          => '1', 
             d           => read_data_2_in, 
             q           => read_data_2_out
-        );
-
-    -- PC+4 register
-    Incremented_pc:    entity work.RegisterNbits
-        generic map (
-            LENGTH      => 32,
-            INIT_VALUE  => INIT
-        )
-        port map (
-            clock       => clock,
-            reset       => reset,
-            ce          => '1', 
-            d           => incremented_pc_in, 
-            q           => incremented_pc_out
         );
 
     -- Imediate extended register
