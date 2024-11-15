@@ -24,7 +24,7 @@ entity DataPath is
         dataAddress         : out std_logic_vector(31 downto 0);  -- Data memory address bus
         data_i              : in  std_logic_vector(31 downto 0);  -- Data bus from data memory 
         data_o              : out std_logic_vector(31 downto 0);  -- Data bus to data memory
-	MemWrite            : out std_logic;
+	    MemWrite            : out std_logic;
         uins_ID             : in  Microinstruction                -- Control path microinstruction
     );
 end DataPath;
@@ -33,21 +33,22 @@ end DataPath;
 architecture structural of DataPath is
 
     -- Instruction Fetch Stage Signals:
-    signal incrementedPC_IF, pc_d, pc_q : std_logic_vector(31 downto 0);
+    signal incrementedPC_IF, pc_d, pc_q, incrementedPC_IF_mux, instruction_IF_mux : std_logic_vector(31 downto 0);
     signal ce_pc : std_logic;
 
     -- Instruction Decode Stage Signals:
-    signal incrementedPC_ID, readData1_ID, readData2_ID, zeroExtended_ID, signExtended_ID, jumpTarget_ID : std_logic_vector(31 downto 0);
-    signal branchOffset, branchTarget, readReg1, readReg2, Data1_ID, Data2_ID, instruction_ID : std_logic_vector(31 downto 0);
-    signal rs_ID, rt_ID, rd_ID: std_logic_vector(4 downto 0);
-    signal ce_stage_ID, rst_branch_ID, rst_stage_ID, zero_branch : std_logic;
+    signal incrementedPC_ID, incrementedPC_ID_mux, readData1_ID, readData2_ID, zeroExtended_ID, zeroExtended_ID_mux, signExtended_ID, signExtended_ID_mux, jumpTarget_ID : std_logic_vector(31 downto 0);
+    signal branchOffset, branchTarget, readReg1, readReg2, Data1_ID, Data1_ID_mux, Data2_ID, Data2_ID_mux, instruction_ID : std_logic_vector(31 downto 0);
+    signal rs_ID, rt_ID, rd_ID, rs_ID_mux, rt_ID_mux, rd_ID_mux: std_logic_vector(4 downto 0);
+    signal ce_stage_ID, bubble_branch_ID, zero_branch : std_logic;
+    signal uins_ID_mux : Microinstruction;
 
     -- Execution Stage Signals:
     signal incrementedPC_EX, result_EX, readData1_EX, readData2_EX, operand1, operand2 : std_logic_vector(31 downto 0);
     signal ALUoperand2, signExtended_EX, zeroExtended_EX : std_logic_vector(31 downto 0);
     signal uins_EX : Microinstruction;
     signal writeRegister_EX, rd_EX, rt_EX, rs_EX : std_logic_vector(4 downto 0);
-    signal zero_EX, rst_stage_EX, rst_hazard_stage_EX : std_logic;
+    signal zero_EX, bubble_hazard_EX : std_logic;
 
     -- Memory Stage Signals:
     signal result_MEM : std_logic_vector(31 downto 0);
@@ -62,6 +63,7 @@ architecture structural of DataPath is
     -- Auxiliar Signals:
     signal ForwardA, ForwardB, Forward1, Forward2 : std_logic_vector(1 downto 0);
     signal ForwardWb_A, ForwardWb_B : std_logic;
+    signal uins_bubble : Microinstruction;
 
     -- SIMULATION Signals:
     signal instruction_Stage_IF : Instruction_type;
@@ -197,11 +199,11 @@ begin
      Stage_ID: entity work.Stage_ID(behavioral)
         port map (
             clock               => clock, 
-            reset               => rst_stage_ID,
+            reset               => reset,
             ce                  => ce_stage_ID,  
-	    incremented_pc_in   => incrementedPC_IF, 
+	        incremented_pc_in   => incrementedPC_IF_mux, 
             incremented_pc_out  => incrementedPC_ID,
-            instruction_in      => instruction_IF,
+            instruction_in      => instruction_IF_mux,
             instruction_out     => instruction_ID
         );
 
@@ -209,24 +211,24 @@ begin
     Stage_EX: entity work.Stage_EX(behavioral)
         port map (
             clock                 => clock, 
-            reset                 => rst_stage_EX,
-            read_data_1_in        => Data1_ID,
+            reset                 => reset,
+            read_data_1_in        => Data1_ID_mux, -- 
       	    read_data_1_out       => readData1_EX,
-	    read_data_2_in        => Data2_ID, 
+	        read_data_2_in        => Data2_ID_mux, --
             read_data_2_out       => readData2_EX, 
-	    incremented_pc_in     => incrementedPC_ID,   
+	        incremented_pc_in     => incrementedPC_ID_mux,   --
             incremented_pc_out    => incrementedPC_EX,
-            imediate_extended_in  => signExtended_ID, 
+            imediate_extended_in  => signExtended_ID_mux, --
             imediate_extended_out => signExtended_EX,
-            zero_extended_in      => zeroExtended_ID,
+            zero_extended_in      => zeroExtended_ID_mux, --
             zero_extended_out     => zeroExtended_EX,
-            rt_in                 => rt_ID, 
+            rt_in                 => rt_ID_mux, --
             rt_out                => rt_EX,
-            rs_in                 => rs_ID,
+            rs_in                 => rs_ID_mux, --
             rs_out                => rs_EX,
-            rd_in                 => rd_ID,  
+            rd_in                 => rd_ID_mux,  --
             rd_out                => rd_EX,  
-            uins_in               => uins_ID,
+            uins_in               => uins_ID_mux, --
             uins_out              => uins_EX
         );
 
@@ -235,9 +237,9 @@ begin
         port map (
             clock            => clock, 
             reset            => reset,
-	    alu_result_in    => result_EX,
+	        alu_result_in    => result_EX,
             alu_result_out   => result_MEM,
-	    write_data_in    => operand2,
+	        write_data_in    => operand2,
             write_data_out   => data_o,
             write_reg_in     => writeRegister_EX,
             write_reg_out    => writeRegister_MEM,
@@ -254,7 +256,7 @@ begin
             write_reg_out    => writeRegister_WB,
             read_data_in     => data_i, 
             read_data_out    => data_i_WB,
-	    alu_result_in    => result_MEM,
+	        alu_result_in    => result_MEM,
             alu_result_out   => result_WB,
             uins_in          => uins_MEM,
             uins_out         => uins_WB
@@ -285,25 +287,21 @@ begin
     -- Hazard Detection Unit
     HazardDetection_unit: entity work.HazardDetection_unit(arch1)
         port map (
-            clock                => clock,
-            reset                => reset,
             rt_ID                => rt_ID,
             rs_ID                => rs_ID,
             rt_EX                => rt_EX,
             MemToReg_EX          => uins_EX.MemToReg,
             ce_pc                => ce_pc,
             ce_stage_ID          => ce_stage_ID,
-            rst_hazard_stage_EX  => rst_hazard_stage_EX
+            bubble_hazard_EX     => bubble_hazard_EX
         );
 
     BranchDetection_unit: entity work.BranchDetection_unit(arch1)
         port map (
-            clock              => clock,
-            reset              => reset,
             Branch_ID          => uins_ID.Branch,
             jump_ID            => uins_ID.Jump,
             zero_branch        => zero_branch,
-            rst_branch_ID      => rst_branch_ID
+            bubble_branch_ID   => bubble_branch_ID
         );
 
     -- MemWrite receive signal of Stage MEM
@@ -312,11 +310,52 @@ begin
     -- Instruction_out receive instruction_out of Stage 1 for decodification by Control Path
     instruction_out <= instruction_ID;
 
-    -- rst_stage_EX  <= rst of system or rst of hazard detection unit for generate a bubble in stage EX:
-    rst_stage_EX <= reset or rst_hazard_stage_EX;
+    -- MUX BUBBLE ID
+    MUX_BUBBLE_incrementedPC_IF: incrementedPC_IF_mux <= incrementedPC_IF when bubble_branch_ID = '0' else
+                                                         (others=>'0');
 
-    --rst of system or rst of branch taken for generate a bubble in stage ID:
-    rst_stage_ID <= reset or rst_branch_ID;
+    MUX_BUBBLE_instruction_IF: instruction_IF_mux <= instruction_IF when bubble_branch_ID = '0' else
+                                                     (others=>'0');
+    
+    -- MUX BUBBLE EX
+
+    MUX_BUBBLE_Data1_ID: Data1_ID_mux <= Data1_ID when bubble_hazard_EX = '0' else
+                                        (others=>'0');
+    
+    MUX_BUBBLE_Data2_ID: Data2_ID_mux <= Data2_ID when bubble_hazard_EX = '0' else
+                                        (others=>'0');
+    
+    MUX_BUBBLE_incrementedPC_ID: incrementedPC_ID_mux <= incrementedPC_ID when bubble_hazard_EX = '0' else
+                                                         (others=>'0');
+
+    MUX_BUBBLE_signExtended_ID: signExtended_ID_mux <= signExtended_ID when bubble_hazard_EX = '0' else
+                                                       (others=>'0');
+
+    MUX_BUBBLE_zeroExtended_ID: zeroExtended_ID_mux <= zeroExtended_ID when bubble_hazard_EX = '0' else
+                                                       (others=>'0');
+
+    MUX_BUBBLE_rt_ID: rt_ID_mux <= rt_ID when bubble_hazard_EX = '0' else
+                                   (others=>'0');
+
+    MUX_BUBBLE_rs_ID: rs_ID_mux <= rs_ID when bubble_hazard_EX = '0' else
+                                   (others=>'0');
+
+    MUX_BUBBLE_rd_ID: rd_ID_mux <= rd_ID when bubble_hazard_EX = '0' else
+                                   (others=>'0');
+
+    MUX_BUBBLE_uins_ID: uins_ID_mux <= uins_ID when bubble_hazard_EX = '0' else
+                                    uins_bubble;
+
+    -- BUBBLE signals 
+
+    uins_bubble.RegWrite     <= '0';
+    uins_bubble.ALUSrc       <= "00";
+    uins_bubble.RegDst       <= '0';
+    uins_bubble.MemToReg     <= '0';
+    uins_bubble.MemWrite     <= '0';
+    uins_bubble.Branch       <= '0';
+    uins_bubble.Jump         <= '0';
+    uins_bubble.instruction  <= BUBBLE;
 
     DECODE_STAGE_IF: -- Decoded Instruction of Instruction Fetch Stage for SIMULATION
     if SYNTHESIS = '0' generate
