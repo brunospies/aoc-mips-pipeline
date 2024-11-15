@@ -55,7 +55,6 @@ Contributions are welcome! If you'd like to enhance the pipeline, optimize the i
 
 ## License
 
-[Specify your license, e.g., MIT, GPL, or custom.]
 
 ## Acknowledgments
 
