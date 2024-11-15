@@ -37,14 +37,14 @@ architecture structural of DataPath is
     signal ce_pc : std_logic;
 
     -- Instruction Decode Stage Signals:
-    signal incrementedPC_ID, incrementedPC_ID_mux, readData1_ID, readData2_ID, zeroExtended_ID, zeroExtended_ID_mux, signExtended_ID, signExtended_ID_mux, jumpTarget_ID : std_logic_vector(31 downto 0);
+    signal incrementedPC_ID, readData1_ID, readData2_ID, zeroExtended_ID, zeroExtended_ID_mux, signExtended_ID, signExtended_ID_mux, jumpTarget_ID : std_logic_vector(31 downto 0);
     signal branchOffset, branchTarget, readReg1, readReg2, Data1_ID, Data1_ID_mux, Data2_ID, Data2_ID_mux, instruction_ID : std_logic_vector(31 downto 0);
     signal rs_ID, rt_ID, rd_ID, rs_ID_mux, rt_ID_mux, rd_ID_mux: std_logic_vector(4 downto 0);
     signal ce_stage_ID, bubble_branch_ID, zero_branch : std_logic;
     signal uins_ID_mux : Microinstruction;
 
     -- Execution Stage Signals:
-    signal incrementedPC_EX, result_EX, readData1_EX, readData2_EX, operand1, operand2 : std_logic_vector(31 downto 0);
+    signal result_EX, readData1_EX, readData2_EX, operand1, operand2 : std_logic_vector(31 downto 0);
     signal ALUoperand2, signExtended_EX, zeroExtended_EX : std_logic_vector(31 downto 0);
     signal uins_EX : Microinstruction;
     signal writeRegister_EX, rd_EX, rt_EX, rs_EX : std_logic_vector(4 downto 0);
@@ -215,9 +215,7 @@ begin
             read_data_1_in        => Data1_ID_mux, -- 
       	    read_data_1_out       => readData1_EX,
 	        read_data_2_in        => Data2_ID_mux, --
-            read_data_2_out       => readData2_EX, 
-	        incremented_pc_in     => incrementedPC_ID_mux,   --
-            incremented_pc_out    => incrementedPC_EX,
+            read_data_2_out       => readData2_EX,
             imediate_extended_in  => signExtended_ID_mux, --
             imediate_extended_out => signExtended_EX,
             zero_extended_in      => zeroExtended_ID_mux, --
@@ -324,9 +322,6 @@ begin
     
     MUX_BUBBLE_Data2_ID: Data2_ID_mux <= Data2_ID when bubble_hazard_EX = '0' else
                                         (others=>'0');
-    
-    MUX_BUBBLE_incrementedPC_ID: incrementedPC_ID_mux <= incrementedPC_ID when bubble_hazard_EX = '0' else
-                                                         (others=>'0');
 
     MUX_BUBBLE_signExtended_ID: signExtended_ID_mux <= signExtended_ID when bubble_hazard_EX = '0' else
                                                        (others=>'0');
