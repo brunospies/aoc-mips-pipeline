@@ -60,4 +60,3 @@ Contributions are welcome! If you'd like to enhance the pipeline, optimize the i
 
 Special thanks to:
 - **Professor Mateus Beck Rutzig** for guidance.
-- **Bruno Henrique Spies** for the implementation.
