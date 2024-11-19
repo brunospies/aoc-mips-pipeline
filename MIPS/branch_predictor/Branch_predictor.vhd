@@ -13,12 +13,15 @@ entity Branch_predictor is
         pc_if           : in std_logic_vector(31 downto 0);
         pc_ex           : in std_logic_vector(31 downto 0);
         pc_cal          : in std_logic_vector(31 downto 0);
+        branch_decision : in std_logic;
         pc_predict      : out std_logic_vector(31 downto 0);
         predict_if      : out std_logic;
         br_test         : out std_logic_vector(31 downto 0);
         predict_branch_test : out std_logic_vector(1 downto 0);
         tag_memory_table_test : out std_logic_vector(19 downto 0);
-        valid_index_test : out std_logic
+        valid_index_test : out std_logic;
+        branch_bit : out std_logic_vector(1 downto 0);
+        branch_index : out std_logic_vector(12 downto 2)
     );
 end Branch_predictor;
 
@@ -66,6 +69,7 @@ begin
             if branch_ex = '1' then 
                 br(to_integer(unsigned(index_ex))) <= pc_cal;
                 tag_memory_table(to_integer(unsigned(index_ex))) <= tag_pc_ex;
+                
                 predict_branch(to_integer(unsigned(index_ex))) <= new_predict_branch(to_integer(unsigned(index_ex)));
                 valid_index(to_integer(unsigned(index_ex))) <= '1';
 
@@ -80,11 +84,11 @@ begin
 
 
     -- Process to update prediction FSM
-    process(clock)
+    process(clock, branch_ex)
     begin
         if rising_edge(clock) then
-            if tag_memory_table(to_integer(unsigned(index_ex))) = tag_pc_ex then  -- Correspondence and update of dynamic branch prediction
-                if branch_ex = '1' then
+            if tag_memory_table(to_integer(unsigned(index_ex))) = tag_pc_ex and branch_ex = '1' then  -- Correspondence and update of dynamic branch prediction
+                if branch_decision = '1' then
                     case predict_branch(to_integer(unsigned(index_ex))) is
                         when "11" =>
                             new_predict_branch(to_integer(unsigned(index_ex))) <= "11";  -- Strongly taken
@@ -110,6 +114,9 @@ begin
             end if;
         end if;
     end process;
+
+    branch_bit <= predict_branch(to_integer(unsigned(index_ex)));
+    branch_index <= index_ex;
 
     -- Process to determine if the branch is taken or not
     process(index_if)
