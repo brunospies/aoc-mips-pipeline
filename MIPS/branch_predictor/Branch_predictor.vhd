@@ -7,16 +7,18 @@ entity Branch_predictor is
         SIZE      : integer := 32       -- Size of the branch history table (Index of the PC)
     );
     port (
-        branch_ex       : in std_logic; 
         clock           : in std_logic;
         reset           : in std_logic; 
-        pc_if           : in std_logic_vector(31 downto 0);
-        pc_ex           : in std_logic_vector(31 downto 0);
-        pc_cal          : in std_logic_vector(31 downto 0);
-        branch_decision : in std_logic;
-        pc_predict      : out std_logic_vector(31 downto 0);
-        predict_if      : out std_logic;
-        br_test         : out std_logic_vector(31 downto 0);
+        branch_ex       : in std_logic;                      -- Branch in execution
+        pc_if           : in std_logic_vector(31 downto 0);  -- PC of the branch instruction in fetch
+        pc_ex           : in std_logic_vector(31 downto 0);  -- PC of the branch instruction in execution
+        pc_cal          : in std_logic_vector(31 downto 0);  -- PC of the branch instruction calculated
+        branch_decision : in std_logic;                      -- Branch decision (taken or not taken)
+        predict_if      : out std_logic;                     -- Prediction status (taken or not taken)
+        pc_predict      : out std_logic_vector(31 downto 0); -- Predicted PC
+        
+        -- Testbench signals
+        br_test         : out std_logic_vector(31 downto 0); -- 
         predict_branch_test : out std_logic_vector(1 downto 0);
         tag_memory_table_test : out std_logic_vector(19 downto 0);
         valid_index_test : out std_logic;
@@ -38,13 +40,16 @@ architecture behavioral of Branch_predictor is
     signal predict_branch : prediction;
     signal tag_memory_table : tag;
     signal valid_index : valid;
-
+    
+    -- Instruction fetch
     alias tag_pc_if is pc_if(31 downto 12);
     alias index_if  is pc_if(12 downto 2);
 
+    -- Instruction execution
     alias tag_pc_ex is pc_ex(31 downto 12);
     alias index_ex  is pc_ex(12 downto 2);
 
+    -- Prediction FSM
     signal new_predict_branch : prediction;
     signal writeEnable : std_logic_vector(SIZE-1 downto 0);
     signal taken : std_logic;
@@ -69,11 +74,10 @@ begin
             if branch_ex = '1' then 
                 br(to_integer(unsigned(index_ex))) <= pc_cal;
                 tag_memory_table(to_integer(unsigned(index_ex))) <= tag_pc_ex;
-                
                 predict_branch(to_integer(unsigned(index_ex))) <= new_predict_branch(to_integer(unsigned(index_ex)));
                 valid_index(to_integer(unsigned(index_ex))) <= '1';
 
-                -- Tests
+                -- Testbench signals
                 br_test <= br(to_integer(unsigned(index_ex)));
                 tag_memory_table_test <= tag_memory_table(to_integer(unsigned(index_ex)));
                 valid_index_test <= valid_index(to_integer(unsigned(index_ex)));
@@ -81,12 +85,11 @@ begin
         end if;
     end process;  
 
-
-
     -- Process to update prediction FSM
     process(clock, branch_ex)
     begin
         if rising_edge(clock) then
+            -- Branch prediction must be updated only if branch is in execution and has the same tag
             if tag_memory_table(to_integer(unsigned(index_ex))) = tag_pc_ex and branch_ex = '1' then  -- Correspondence and update of dynamic branch prediction
                 if branch_decision = '1' then
                     case predict_branch(to_integer(unsigned(index_ex))) is
@@ -115,6 +118,7 @@ begin
         end if;
     end process;
 
+    -- Testbench signals
     branch_bit <= predict_branch(to_integer(unsigned(index_ex)));
     branch_index <= index_ex;
 
@@ -123,11 +127,11 @@ begin
     begin
         case predict_branch(to_integer(unsigned(index_if))) is
             when "11" | "10" =>
-                taken <= '1';  -- Branch taken
+                taken <= '1';   -- Branch taken
             when "01" | "00" =>
-                taken <= '0';  -- Branch not taken
+                taken <= '0';   -- Branch not taken
             when others =>
-                taken <= '0';
+                taken <= '0';   -- Default not taken
         end case;
     end process;
 
