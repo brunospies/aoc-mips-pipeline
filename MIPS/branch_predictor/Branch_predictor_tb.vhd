@@ -12,16 +12,19 @@ architecture test of tb_Branch_predictor is
             SIZE : integer := 32
         );
         port (
-            branch_ex   : in std_logic; 
             clock       : in std_logic;
             reset       : in std_logic; 
+            branch_ex   : in std_logic; 
             pc_if       : in std_logic_vector(31 downto 0);
             pc_ex       : in std_logic_vector(31 downto 0);
             pc_cal      : in std_logic_vector(31 downto 0);
             branch_decision: in std_logic;
-            pc_predict  : out std_logic_vector(31 downto 0);
             predict_if  : out std_logic;
+            pc_predict  : out std_logic_vector(31 downto 0);
+
+            -- Testbench signals
             br_test     : out std_logic_vector(31 downto 0);
+            predict_branch_test : out std_logic_vector(1 downto 0);
             tag_memory_table_test : out std_logic_vector(19 downto 0);
             valid_index_test : out std_logic;
             branch_bit : out std_logic_vector(1 downto 0);
@@ -38,6 +41,8 @@ architecture test of tb_Branch_predictor is
     signal pc_cal      : std_logic_vector(31 downto 0) := (others => '0');
     signal pc_predict  : std_logic_vector(31 downto 0);
     signal predict_if  : std_logic;
+
+    -- Testbench signals
     signal br_test     : std_logic_vector(31 downto 0);
     signal tag_memory_table_test : std_logic_vector(19 downto 0);
     signal valid_index_test : std_logic;
@@ -80,7 +85,7 @@ begin
         reset <= '1';
         wait for clk_period;
         reset <= '0';
-        wait for clk_period * 2;  -- Pausa extra para estabilidade
+        wait for clk_period * 2;  -- Pause for 2 clock cycles
 
         --  Test case 1: No branch taken initially
         -- ========================================
@@ -124,7 +129,9 @@ begin
         branch_ex <= '1';
         wait for clk_period * 2;
 
-        
+        report "Test case 4: Branch taken at pc_cal = 0x00000040. Expected predict_if = '1'" severity note;
+        assert predict_if = '1' report "Error: Expected branch taken (predict_if = '1')." severity error;
+
         -- Test case 5: Not Taken
         -- ========================================
         branch_decision_test <= '0';
@@ -134,6 +141,9 @@ begin
         branch_ex <= '1';
         wait for clk_period * 2;
 
+        report "Test case 5: Branch not taken at pc_cal = 0x00000050. Expected predict_if = '1'" severity note;
+        assert predict_if = '1' report "Error: Expected no branch taken (predict_if = '1')." severity error;
+
         -- Test case 6: Not Taken
         -- ========================================
         pc_if <= x"00000004";
@@ -142,6 +152,9 @@ begin
         branch_ex <= '1';
         wait for clk_period * 2;
 
+        report "Test case 6: Branch not taken at pc_cal = 0x00000060. Expected predict_if = '1'" severity note;
+        assert predict_if = '1' report "Error: Expected no branch taken (predict_if = '1')." severity error;
+
         -- Test case 7: Not Taken
         -- ========================================
         pc_if <= x"00000004";
@@ -149,6 +162,9 @@ begin
         pc_cal <= x"00000070";  
         branch_ex <= '1';
         wait for clk_period * 2;
+
+        report "Test case 7: Branch not taken at pc_cal = 0x00000070. Expected predict_if = '0'" severity note;
+        assert predict_if = '0' report "Error: Expected no branch taken (predict_if = '0')." severity error;
 
         wait;
     end process;
