@@ -9,7 +9,7 @@ entity Branch_predictor is
     port (
         clock           : in std_logic;
         reset           : in std_logic; 
-        branch_ex       : in std_logic;                      -- Branch in execution
+        branch_ex       : in std_logic;                      -- Branch in execution instruction fetch
         pc_if           : in std_logic_vector(31 downto 0);  -- PC of the branch instruction in fetch
         pc_ex           : in std_logic_vector(31 downto 0);  -- PC of the branch instruction in execution
         pc_cal          : in std_logic_vector(31 downto 0);  -- PC of the branch instruction calculated
@@ -18,7 +18,7 @@ entity Branch_predictor is
         pc_predict      : out std_logic_vector(31 downto 0); -- Predicted PC
         
         -- Testbench signals
-        br_test         : out std_logic_vector(31 downto 0); -- 
+        br_test         : out std_logic_vector(31 downto 0);
         predict_branch_test : out std_logic_vector(1 downto 0);
         tag_memory_table_test : out std_logic_vector(19 downto 0);
         valid_index_test : out std_logic;
@@ -86,7 +86,7 @@ begin
     end process;  
 
     -- Process to update prediction FSM
-    process(clock, branch_ex)
+    process(clock)
     begin
         if rising_edge(clock) then
             -- Branch prediction must be updated only if branch is in execution and has the same tag
@@ -123,16 +123,18 @@ begin
     branch_index <= index_ex;
 
     -- Process to determine if the branch is taken or not
-    process(index_if)
+    process(clock, index_if)
     begin
-        case predict_branch(to_integer(unsigned(index_if))) is
-            when "11" | "10" =>
-                taken <= '1';   -- Branch taken
-            when "01" | "00" =>
-                taken <= '0';   -- Branch not taken
-            when others =>
-                taken <= '0';   -- Default not taken
-        end case;
+        if rising_edge(clock) then 
+            case predict_branch(to_integer(unsigned(index_if))) is
+                when "11" | "10" =>
+                    taken <= '1';   -- Branch taken
+                when "01" | "00" =>
+                    taken <= '0';   -- Branch not taken
+                when others =>
+                    taken <= '0';   -- Default not taken
+            end case;
+        end if;
     end process;
 
     -- Predict the PC based on branch prediction or default incremented PC
