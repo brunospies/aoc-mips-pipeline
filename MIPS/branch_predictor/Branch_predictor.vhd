@@ -9,7 +9,7 @@ entity Branch_predictor is
     port (
         clock           : in std_logic;
         reset           : in std_logic; 
-        branch_ex       : in std_logic;                      -- Branch in execution instruction fetch
+        branch_ex       : in std_logic;                      -- Branch in execution 
         pc_if           : in std_logic_vector(31 downto 0);  -- PC of the branch instruction in fetch
         pc_ex           : in std_logic_vector(31 downto 0);  -- PC of the branch instruction in execution
         pc_cal          : in std_logic_vector(31 downto 0);  -- PC of the branch instruction calculated
@@ -76,11 +76,6 @@ begin
                 tag_memory_table(to_integer(unsigned(index_ex))) <= tag_pc_ex;
                 predict_branch(to_integer(unsigned(index_ex))) <= new_predict_branch(to_integer(unsigned(index_ex)));
                 valid_index(to_integer(unsigned(index_ex))) <= '1';
-
-                -- Testbench signals
-                br_test <= br(to_integer(unsigned(index_ex)));
-                tag_memory_table_test <= tag_memory_table(to_integer(unsigned(index_ex)));
-                valid_index_test <= valid_index(to_integer(unsigned(index_ex)));
             end if;
         end if;
     end process;  
@@ -118,10 +113,6 @@ begin
         end if;
     end process;
 
-    -- Testbench signals
-    branch_bit <= predict_branch(to_integer(unsigned(index_ex)));
-    branch_index <= index_ex;
-
     -- Process to determine if the branch is taken or not
     process(clock, index_if)
     begin
@@ -145,5 +136,12 @@ begin
 
     -- Output the prediction status
     predict_if <= taken;
+
+    -- Testbench signals
+    branch_bit <= predict_branch(to_integer(unsigned(index_ex)));
+    branch_index <= index_ex;
+    br_test <= br(to_integer(unsigned(index_ex)));
+    tag_memory_table_test <= tag_memory_table(to_integer(unsigned(index_ex)));
+    valid_index_test <= valid_index(to_integer(unsigned(index_ex)));
 
 end behavioral;
