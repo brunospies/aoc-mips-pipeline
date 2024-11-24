@@ -46,7 +46,7 @@ architecture test of tb_Branch_predictor is
     signal br_test     : std_logic_vector(31 downto 0);
     signal tag_memory_table_test : std_logic_vector(19 downto 0);
     signal valid_index_test : std_logic;
-    signal branch_decision_test : std_logic;
+    signal branch_decision : std_logic;
 
     -- Clock period definition
     constant clk_period : time := 10 ns;
@@ -61,7 +61,7 @@ begin
             pc_if       => pc_if,
             pc_ex       => pc_ex,
             pc_cal      => pc_cal,
-            branch_decision => branch_decision_test,
+            branch_decision => branch_decision,
             pc_predict  => pc_predict,
             predict_if  => predict_if,
             br_test     => br_test,
@@ -85,13 +85,13 @@ begin
         reset <= '1';
         wait for clk_period;
         reset <= '0';
-        wait for clk_period * 3/2;
+        wait for clk_period * 3/2; -- In the rising edge of the clock starts 
 
         -- Test case 1: No branch taken initially
         -- ========================================
         -- Instruction fetch
         pc_if <= x"00000004";
-        branch_decision_test <= '0';
+        branch_decision <= '0';
 
         -- Decodification
         wait for clk_period * 2;
@@ -102,20 +102,23 @@ begin
         branch_ex <= '1';
         pc_ex <= x"00000004";
         pc_cal <= x"00000010";  -- Next address if branch is taken (16 bytes ahead)
-        branch_decision_test <= '0'; -- Branch not taken, store new address 00
+        branch_decision <= '0'; -- Branch not taken, store new address 00
         
-        wait for clk_period * 5;
+        -- Memory access 
+        wait for clk_period * 2;
+        branch_ex <= '0'; -- Branch execution is finished
 
-        branch_decision_test <= '0';
+        -- Write Back
+        wait for clk_period * 2;
 
         report "Test case 1: No branch taken at pc_if = 0x00000000. Expected predict_if = '0'" severity note;
         assert predict_if = '0' report "Error: Expected no branch taken (predict_if = '0')." severity error;
 
-        -- Test case 2: No branch taken initially
+        -- Test case 2: Branch taken 
         -- ========================================
         -- Instruction fetch
         pc_if <= x"00000004";
-        branch_decision_test <= '0';
+        branch_decision <= '0';
 
         -- Decodification
         wait for clk_period * 2;
@@ -126,20 +129,24 @@ begin
         branch_ex <= '1';
         pc_ex <= x"00000004";
         pc_cal <= x"00000020";  -- Next address if branch is taken (32 bytes ahead)
-        branch_decision_test <= '0'; -- Branch not taken, store the same address 00
+        branch_decision <= '1'; -- Branch taken, store the new address 01
         
-        wait for clk_period * 5;
+        -- Memory access
+        wait for clk_period * 2;
+        branch_ex <= '0'; -- Branch execution is finished
+        branch_decision <= '0';
 
-        branch_decision_test <= '0';
+        -- Write Back
+        wait for clk_period * 2;
 
-        report "Test case 2: No branch taken at pc_if = 0x00000004. Expected predict_if = '0'" severity note;
-        assert predict_if = '0' report "Error: Expected no branch taken (predict_if = '0')." severity error;
+        report "Test case 2: Branch taken at pc_if = 0x00000004. Expected predict_if = '0'" severity note;
+        assert predict_if = '0' report "Error: Expected branch taken (predict_if = '0')." severity error;
 
         -- Test case 3: Branch taken
         -- ========================================
         -- Instruction fetch
         pc_if <= x"00000004";
-        branch_decision_test <= '0';
+        branch_decision <= '0';
 
         -- Decodification
         wait for clk_period * 2;
@@ -150,11 +157,15 @@ begin
         branch_ex <= '1';
         pc_ex <= x"00000004";
         pc_cal <= x"00000030";  -- Next address if branch is taken (48 bytes ahead)
-        branch_decision_test <= '1'; -- Branch taken, store new address 10
+        branch_decision <= '1'; -- Branch taken, store new address 10
         
-        wait for clk_period * 5;
+        -- Memory access
+        wait for clk_period * 2;
+        branch_ex <= '0'; -- Branch execution is finished
+        branch_decision <= '0';
 
-        branch_decision_test <= '0';
+        -- Write Back
+        wait for clk_period * 2;
 
         report "Test case 3: Branch taken at pc_if = 0x00000004. Expected predict_if = '1'" severity note;
         assert predict_if = '1' report "Error: Expected branch taken (predict_if = '1')." severity error;
@@ -163,7 +174,7 @@ begin
         -- ========================================
         -- Instruction fetch
         pc_if <= x"00000004";
-        branch_decision_test <= '0';
+        branch_decision <= '0';
 
         -- Decodification
         wait for clk_period * 2;
@@ -174,11 +185,15 @@ begin
         branch_ex <= '1';
         pc_ex <= x"00000004";
         pc_cal <= x"00000040";  -- Next address if branch is taken (64 bytes ahead)
-        branch_decision_test <= '1'; -- Branch taken, store new address 11
+        branch_decision <= '1'; -- Branch taken, store new address 11
         
-        wait for clk_period * 5;
+        -- Memory access
+        wait for clk_period * 2;
+        branch_ex <= '0'; -- Branch execution is finished
+        branch_decision <= '0';
 
-        branch_decision_test <= '0';
+        -- Write Back
+        wait for clk_period * 2;
 
         report "Test case 4: Branch taken at pc_if = 0x00000004. Expected predict_if = '1'" severity note;
         assert predict_if = '1' report "Error: Expected branch taken (predict_if = '1')." severity error;
@@ -187,7 +202,7 @@ begin
         -- ========================================
         -- Instruction fetch
         pc_if <= x"00000004";
-        branch_decision_test <= '0';
+        branch_decision <= '0';
 
         -- Decodification
         wait for clk_period * 2;
@@ -198,20 +213,24 @@ begin
         branch_ex <= '1';
         pc_ex <= x"00000004";
         pc_cal <= x"00000050";  -- Next address if branch is taken (80 bytes ahead)
-        branch_decision_test <= '0'; -- Branch not taken, store new address 10
+        branch_decision <= '0'; -- Branch not taken, store new address 10
         
-        wait for clk_period * 5;
+        -- Memory access
+        wait for clk_period * 2;
+        branch_ex <= '0'; -- Branch execution is finished
+        branch_decision <= '0';
 
-        branch_decision_test <= '0';
+        -- Write Back
+        wait for clk_period * 2;
 
         report "Test case 5: Branch not taken at pc_if = 0x00000004. Expected predict_if = '0'" severity note;
-        assert predict_if = '0' report "Error: Expected no branch taken (predict_if = '0')." severity error;
+        assert predict_if = '1' report "Error: Expected branch taken (predict_if = '1')." severity error;
 
         -- Test case 6: Branch not taken
         -- ========================================
         -- Instruction fetch
         pc_if <= x"00000004";
-        branch_decision_test <= '0';
+        branch_decision <= '0';
 
         -- Decodification
         wait for clk_period * 2;
@@ -222,11 +241,15 @@ begin
         branch_ex <= '1';
         pc_ex <= x"00000004";
         pc_cal <= x"00000060";  -- Next address if branch is taken (96 bytes ahead)
-        branch_decision_test <= '0'; -- Branch not taken, store new address 01
+        branch_decision <= '0'; -- Branch not taken, store new address 01
         
-        wait for clk_period * 5;
+        -- Memory access
+        wait for clk_period * 2;
+        branch_ex <= '0'; -- Branch execution is finished
+        branch_decision <= '0';
 
-        branch_decision_test <= '0';
+        -- Write Back
+        wait for clk_period * 2;
 
         report "Test case 6: Branch not taken at pc_if = 0x00000004. Expected predict_if = '0'" severity note;
         assert predict_if = '0' report "Error: Expected no branch taken (predict_if = '0')." severity error;
@@ -235,7 +258,7 @@ begin
         -- ========================================
         -- Instruction fetch
         pc_if <= x"00000004";
-        branch_decision_test <= '0';
+        branch_decision <= '0';
 
         -- Decodification
         wait for clk_period * 2;
@@ -246,11 +269,15 @@ begin
         branch_ex <= '1';
         pc_ex <= x"00000004";
         pc_cal <= x"00000070";  -- Next address if branch is taken (112 bytes ahead)
-        branch_decision_test <= '0'; -- Branch not taken, store new address 00
+        branch_decision <= '0'; -- Branch not taken, store new address 00
         
-        wait for clk_period * 5;
+        -- Memory access
+        wait for clk_period * 2;
+        branch_ex <= '0'; -- Branch execution is finished
+        branch_decision <= '0';
 
-        branch_decision_test <= '0';
+        -- Write Back
+        wait for clk_period * 2;
 
         report "Test case 7: Branch not taken at pc_if = 0x00000004. Expected predict_if = '0'" severity note;
         assert predict_if = '0' report "Error: Expected no branch taken (predict_if = '0')." severity error;
