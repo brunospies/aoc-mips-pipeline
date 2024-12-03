@@ -17,6 +17,8 @@ entity Branch_predictor is
         predicted_IF    : out std_logic;                     -- Prediction status (taken or not taken)
         pc_predicted_IF : out std_logic_vector(31 downto 0); -- Predicted PC
         bubble_branch_ID: out std_logic;                     -- Bubble the branch in ID stage
+        jump_ID         : in std_logic;                      -- Jump instruction in ID stage
+        jumpTarget_ID   : in std_logic_vector(31 downto 0);  -- Jump target in ID stage
         -- Testbench signals
         br_test         : out std_logic_vector(31 downto 0);
         predict_branch_test : out std_logic_vector(1 downto 0);
@@ -128,10 +130,11 @@ begin
     -- Predict the PC based on branch prediction or default incremented PC
     pc_predicted_IF <= br(to_integer(unsigned(index_if))) when (taken = '1' and valid_index(to_integer(unsigned(index_if))) = '1' 
                         and tag_memory_table(to_integer(unsigned(index_if))) = tag_pc_if) else
-                        branchTarget when (branch_decision_ID /= taken) and branch_decision_ID = '1' else -- Should have been taken but was not taken
-                        incrementedPC_ID when (branch_decision_ID /= taken) and branch_decision_ID = '0' else -- Should have been not taken but was taken
+                        branchTarget when (branch_decision_ID /= taken) and branch_decision_ID = '1' and branch_ID = '1' else -- Should have been taken but was not taken
+                        incrementedPC_ID when (branch_decision_ID /= taken) and branch_decision_ID = '0' and branch_ID = '1' else -- Should have been not taken but was taken
+                        jumpTarget_ID when jump_ID = '1' else
                         incrementedPC_IF;
-g
+
     -- Output the prediction status
     predicted_IF <= taken;
     -- Bubble the branch in ID stage

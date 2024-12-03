@@ -322,7 +322,9 @@ begin
             branch_decision_ID     => branch_decision_ID, -- 
             pc_predicted_IF     => pc_predicted_IF,
             predicted_IF        => predicted_IF,
-            bubble_branch_ID       => bubble_branch_ID
+            bubble_branch_ID       => bubble_branch_ID,
+            jumpTarget_ID       => jumpTarget_ID,
+            jump_ID            => uins_ID.Jump
         );
 
     -- MemWrite receive signal of Stage MEM
