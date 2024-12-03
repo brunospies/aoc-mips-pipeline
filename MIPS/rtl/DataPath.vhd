@@ -35,6 +35,9 @@ architecture structural of DataPath is
     -- Instruction Fetch Stage Signals:
     signal incrementedPC_IF, pc_d, pc_q, incrementedPC_IF_mux, instruction_IF_mux : std_logic_vector(31 downto 0);
     signal ce_pc : std_logic;
+    
+    signal pc_predicted_IF : std_logic_vector(31 downto 0);
+    signal predicted_IF : std_logic;
 
     -- Instruction Decode Stage Signals:
     signal incrementedPC_ID, readData1_ID, readData2_ID, zeroExtended_ID, zeroExtended_ID_mux, signExtended_ID, signExtended_ID_mux, jumpTarget_ID : std_logic_vector(31 downto 0);
@@ -43,6 +46,10 @@ architecture structural of DataPath is
     signal ce_stage_ID, bubble_branch_ID, zero_branch : std_logic;
     signal uins_ID_mux : Microinstruction;
 
+    signal predicted_ID : std_logic;
+    signal pc_predicted_ID : std_logic_vector(31 downto 0);
+    signal branch_decision_ID : std_logic;
+    
     -- Execution Stage Signals:
     signal result_EX, readData1_EX, readData2_EX, operand1, operand2 : std_logic_vector(31 downto 0);
     signal ALUoperand2, signExtended_EX, zeroExtended_EX : std_logic_vector(31 downto 0);
@@ -71,6 +78,8 @@ architecture structural of DataPath is
     alias  funct: std_logic_vector(5 downto 0) is instruction_IF(5 downto 0);
     signal cicles : integer := 0;
 
+    -- Tests
+    signal zero_branch_test : std_logic_vector(1 downto 0);
     
 begin
 
@@ -111,10 +120,16 @@ begin
     jumpTarget_ID <= incrementedPC_ID(31 downto 28) & instruction_ID(25 downto 0) & "00";
     
     -- MUX which selects the PC value
-    MUX_PC: pc_d <= branchTarget when (uins_ID.Branch and zero_branch) = '1' else 
-            jumpTarget_ID when uins_ID.Jump = '1' else
-            incrementedPC_IF;
-      
+    -- Branch prediction controls the PC
+    MUX_PC: pc_d <= jumpTarget_ID when uins_ID.Jump = '1' else
+    pc_predicted_IF;
+    
+    -- Bubble if the branch predicted was wrong
+    -- Wrong predict generates a bubble and the pc is change to the correct address
+    branch_decision_ID <= '1' when (zero_branch and uins_ID.Branch) = '1' else '0'; 
+
+    zero_branch_test <= "01" when zero_branch = '1' else "00";
+
     -- Selects the second ALU operand
     -- MUX at the ALU input
     MUX_ALU: ALUoperand2 <= operand2 when uins_EX.ALUSrc = "00" else
@@ -204,7 +219,9 @@ begin
 	        incremented_pc_in   => incrementedPC_IF_mux, 
             incremented_pc_out  => incrementedPC_ID,
             instruction_in      => instruction_IF_mux,
-            instruction_out     => instruction_ID
+            instruction_out     => instruction_ID,
+            pc_predicted_in     => pc_predicted_IF,
+            pc_predicted_out    => pc_predicted_ID
         );
 
     -- Stage Exexution of Pipeline
@@ -294,12 +311,18 @@ begin
             bubble_hazard_EX     => bubble_hazard_EX
         );
 
-    BranchDetection_unit: entity work.BranchDetection_unit(arch1)
+    Branch_predictor: entity work.Branch_predictor(behavioral)
         port map (
-            Branch_ID          => uins_ID.Branch,
-            jump_ID            => uins_ID.Jump,
-            zero_branch        => zero_branch,
-            bubble_branch_ID   => bubble_branch_ID
+            branch_ID           => uins_ID.Branch,
+            clock               => clock,
+            reset               => reset,
+            incrementedPC_IF               => incrementedPC_IF,
+            incrementedPC_ID               => incrementedPC_ID, -- 
+            branchTarget              => branchTarget, --
+            branch_decision_ID     => branch_decision_ID, -- 
+            pc_predicted_IF     => pc_predicted_IF,
+            predicted_IF        => predicted_IF,
+            bubble_branch_ID       => bubble_branch_ID
         );
 
     -- MemWrite receive signal of Stage MEM
@@ -316,7 +339,6 @@ begin
                                                      (others=>'0');
     
     -- MUX BUBBLE EX
-
     MUX_BUBBLE_Data1_ID: Data1_ID_mux <= Data1_ID when bubble_hazard_EX = '0' else
                                         (others=>'0');
     
@@ -342,7 +364,6 @@ begin
                                     uins_bubble;
 
     -- BUBBLE signals 
-
     uins_bubble.RegWrite     <= '0';
     uins_bubble.ALUSrc       <= "00";
     uins_bubble.RegDst       <= '0';

@@ -54,7 +54,7 @@ begin
         generic map (
             SIZE            => 100,                        -- Memory depth
             START_ADDRESS   => MARS_INSTRUCTION_OFFSET,    -- MARS initial address (mapped to memory address 0x00000000)
-            imageFileName   => "BubbleSort_code.txt"
+            imageFileName   => "/home/aki/Desktop/GitHub/aoc-mips-pipeline/MIPS/tb/BubbleSort_code.txt"
         )
         port map (
             clock           => clock,
@@ -69,7 +69,7 @@ begin
         generic map (
             SIZE            => 100,                  -- Memory depth
             START_ADDRESS   => MARS_DATA_OFFSET,     -- MARS initial address (mapped to memory address 0x00000000)
-            imageFileName   => "BubbleSort_data.txt"
+            imageFileName   => "/home/aki/Desktop/GitHub/aoc-mips-pipeline/MIPS/tb/BubbleSort_data.txt"
         )
         port map (
             clock           => clock,

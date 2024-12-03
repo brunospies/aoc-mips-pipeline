@@ -20,7 +20,9 @@ entity Stage_ID is
 	    incremented_pc_in   : in  std_logic_vector(31 downto 0);  
         incremented_pc_out  : out std_logic_vector(31 downto 0);
         instruction_in      : in  std_logic_vector(31 downto 0);  
-        instruction_out     : out std_logic_vector(31 downto 0)                
+        instruction_out     : out std_logic_vector(31 downto 0);
+        pc_predicted_in     : in std_logic_vector(31 downto 0);
+        pc_predicted_out    : out std_logic_vector(31 downto 0)
     );
 end Stage_ID;
 
@@ -56,5 +58,19 @@ begin
             d           => instruction_in, 
             q           => instruction_out
         );
-    
+
+    -- PC predicted register
+    PC_Predicted:    entity work.RegisterNbits
+        generic map (
+            LENGTH      => 32,
+            INIT_VALUE  => INIT
+        )
+        port map (
+            clock       => clock,
+            reset       => reset,
+            ce          => ce, 
+            d           => pc_predicted_in, 
+            q           => pc_predicted_out
+        );
+
 end behavioral;

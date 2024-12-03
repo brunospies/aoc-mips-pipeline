@@ -16,7 +16,7 @@
 0x00400034  0x25080004  addiu $8,$8,0x00000004 23        addiu   $t0, $t0, 4             # t0 points the next element
 0x00400038  0x25ceffff  addiu $14,$14,0xffffff 24        addiu   $t6, $t6, -1            # size--
 0x0040003c  0x11cdfff2  beq $14,$13,0xfffffff2 25        beq     $t6, $t5, while         # Verifies if all elements were compared
-0x00400040  0x08100009  j 0x00400024           26        j       loop    
+0x00400040  0x08100009  j 0x00400024           26        j       loop                    # Swap
 0x00400044  0xad090004  sw $9,0x00000004($8)   30        sw      $t1, 4($t0)
 0x00400048  0xad0a0000  sw $10,0x00000000($8)  31        sw      $t2, 0($t0)
 0x0040004c  0x24180001  addiu $24,$0,0x0000000 32        addiu   $t8, $zero, 1           # Indicates a swap
