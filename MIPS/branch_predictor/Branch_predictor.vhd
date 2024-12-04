@@ -120,7 +120,12 @@ begin
                     end case;
                 end if;
             else
-                new_predict_branch <= "00";  -- Strongly not taken
+                -- First time the branch is executed bypass
+                if (branch_decision_ID and branch_ID) = '1' then
+                    new_predict_branch <= "01";  -- Weakly not taken
+                else
+                    new_predict_branch <= "00";  -- Strongly not taken
+                end if;
             end if;
         end if;
     end process;
