@@ -119,17 +119,9 @@ begin
     
     -- Jump target address
     jumpTarget_ID <= incrementedPC_ID(31 downto 28) & instruction_ID(25 downto 0) & "00";
-    
-    -- MUX which selects the PC value
-    -- Branch prediction controls the PC
-    MUX_PC: pc_d <= jumpTarget_ID when uins_ID.Jump = '1' else
-    pc_predicted_IF;
-    
-    -- Bubble if the branch predicted was wrong
-    -- Wrong predict generates a bubble and the pc is change to the correct address
-    branch_decision_ID <= '1' when (zero_branch and uins_ID.Branch) = '1' else '0'; 
 
-    zero_branch_test <= "01" when zero_branch = '1' else "00";
+    -- Decision taken or not taken of the branch instruction
+    branch_decision_ID <= zero_branch and uins_ID.Branch; 
 
     -- Selects the second ALU operand
     -- MUX at the ALU input
@@ -318,23 +310,22 @@ begin
 
     Branch_predictor: entity work.Branch_predictor(behavioral)
         port map (
-            branch_ID           => uins_ID.Branch,
-            clock               => clock,
-            reset               => reset,
-            incrementedPC_IF               => incrementedPC_IF,
-            incrementedPC_ID               => incrementedPC_ID, -- 
-            branchTarget              => branchTarget, --
-            branch_decision_ID     => branch_decision_ID, -- 
-            pc_predicted_IF     => pc_predicted_IF,
-            predicted_IF        => predicted_IF,
-            bubble_branch_ID       => bubble_branch_ID,
-            jumpTarget_ID       => jumpTarget_ID,
+            clock              => clock,
+            reset              => reset,
+            incrementedPC_IF   => incrementedPC_IF,
+            pc_predicted_IF    => pc_d,
+            predicted_IF       => predicted_IF,
+            incrementedPC_ID   => incrementedPC_ID,
+            branch_ID          => uins_ID.Branch,
+            branchTarget_ID    => branchTarget,
+            branch_decision_ID => branch_decision_ID,
+            bubble_branch_ID   => bubble_branch_ID,
             jump_ID            => uins_ID.Jump,
-            branch_EX           => uins_EX.Branch,
-            incrementedPC_EX          => incrementedPC_EX,
-            branchTarget_EX     => branchTarget_EX
+            jumpTarget_ID      => jumpTarget_ID,
+            incrementedPC_EX   => incrementedPC_EX,
+            branch_EX          => uins_EX.Branch,
+            branchTarget_EX    => branchTarget_EX
         );
-
     -- MemWrite receive signal of Stage MEM
     MemWrite <= uins_MEM.MemWrite;
 
