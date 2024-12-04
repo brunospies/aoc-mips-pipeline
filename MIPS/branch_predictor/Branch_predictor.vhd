@@ -4,7 +4,7 @@ use IEEE.numeric_std.all;
 
 entity Branch_predictor is
     generic (
-        SIZE      : integer := 512       -- Size of the branch history table (Index of the PC)
+        SIZE      : integer := 32       -- Size of the branch history table (Index of the PC)
     );
     port (
         clock           : in std_logic;
@@ -19,6 +19,10 @@ entity Branch_predictor is
         bubble_branch_ID: out std_logic;                     -- Bubble the branch in ID stage
         jump_ID         : in std_logic;                      -- Jump instruction in ID stage
         jumpTarget_ID   : in std_logic_vector(31 downto 0);  -- Jump target in ID stage
+        branch_EX       : in std_logic;                      -- Branch in execution
+        incrementedPC_EX          : in std_logic_vector(31 downto 0);  -- PC of the branch instruction in execution
+        branchTarget_EX : in std_logic_vector(31 downto 0);  -- PC of the branch instruction calculated
+
         -- Testbench signals
         br_test         : out std_logic_vector(31 downto 0);
         predict_branch_test : out std_logic_vector(1 downto 0);
@@ -52,15 +56,19 @@ architecture behavioral of Branch_predictor is
     alias tag_pc_id is incrementedPC_ID(31 downto 12);
     alias index_id  is incrementedPC_ID(12 downto 2);
 
+    -- Instruction execution stage
+    alias tag_pc_EX is incrementedPC_EX(31 downto 12);
+    alias index_EX  is incrementedPC_EX(12 downto 2);
+
     -- Prediction FSM
-    signal new_predict_branch : prediction;
+    signal new_predict_branch: std_logic_vector(1 downto 0); 
     signal taken : std_logic;
 
     signal wrong_predict : std_logic_vector(1 downto 0);
 
 begin            
     -- Process to write the history table when a branch
-    process(clock, reset, branch_id)
+    process(clock, reset, new_predict_branch)
     begin
         if reset = '1' then
             for i in 0 to SIZE-1 loop
@@ -69,45 +77,50 @@ begin
                 predict_branch(i) <= (others => '0');    -- Set all the predictions to not taken
                 valid_index(i) <= '0';
             end loop;
-        elsif rising_edge(clock) then 
-            if branch_id = '1' then 
-                br(to_integer(unsigned(index_id))) <= branchTarget;
-                tag_memory_table(to_integer(unsigned(index_id))) <= tag_pc_id;
-                predict_branch(to_integer(unsigned(index_id))) <= new_predict_branch(to_integer(unsigned(index_id)));
-                valid_index(to_integer(unsigned(index_id))) <= '1';
+
+        elsif rising_edge(clock) then
+            if branch_EX = '1' then 
+                br(to_integer(unsigned(index_EX))) <= branchTarget_EX;
+                tag_memory_table(to_integer(unsigned(index_EX))) <= tag_pc_EX;
+                predict_branch(to_integer(unsigned(index_EX))) <= new_predict_branch;
+                valid_index(to_integer(unsigned(index_EX))) <= '1';
             end if;
         end if;
     end process;
 
     -- Process to update prediction FSM
-    process(clock)
+    process(clock, reset)
     begin
-        if rising_edge(clock) then
+        if reset = '1' then
+            new_predict_branch <= "00";  -- Strongly not taken
+        elsif rising_edge(clock) then
             -- Branch prediction must be updated only if branch is in execution and has the same tag
             if tag_memory_table(to_integer(unsigned(index_id))) = tag_pc_id and branch_id = '1' then  -- Correspondence and update of dynamic branch prediction
                 if branch_decision_ID = '1' then
                     case predict_branch(to_integer(unsigned(index_id))) is
                         when "11" =>
-                            new_predict_branch(to_integer(unsigned(index_id))) <= "11";  -- Strongly taken
+                            new_predict_branch <= "11";  -- Strongly taken
                         when "10" =>
-                            new_predict_branch(to_integer(unsigned(index_id))) <= "11";  -- Taken
+                            new_predict_branch <= "11";  -- Taken
                         when "01" =>
-                            new_predict_branch(to_integer(unsigned(index_id))) <= "10";  -- Weakly taken
+                            new_predict_branch <= "10";  -- Weakly taken
                         when others =>
-                            new_predict_branch(to_integer(unsigned(index_id))) <= "01";  -- Weakly not taken
+                            new_predict_branch <= "01";  -- Weakly not taken
                     end case;
                 else
                     case predict_branch(to_integer(unsigned(index_id))) is
                         when "11" =>
-                            new_predict_branch(to_integer(unsigned(index_id))) <= "10";  -- Weakly taken
+                            new_predict_branch <= "10";  -- Weakly taken
                         when "10" =>
-                            new_predict_branch(to_integer(unsigned(index_id))) <= "01";  -- Weakly not taken
+                            new_predict_branch <= "01";  -- Weakly not taken
                         when "01" =>
-                            new_predict_branch(to_integer(unsigned(index_id))) <= "00";  -- Strongly not taken
+                            new_predict_branch <= "00";  -- Strongly not taken
                         when others =>
-                            new_predict_branch(to_integer(unsigned(index_id))) <= "00";  -- Strongly not taken
+                            new_predict_branch <= "00";  -- Strongly not taken
                     end case;
                 end if;
+            else
+                new_predict_branch <= "00";  -- Strongly not taken
             end if;
         end if;
     end process;
@@ -138,8 +151,8 @@ begin
     -- Output the prediction status
     predicted_IF <= taken;
     -- Bubble the branch in ID stage
-    bubble_branch_ID <= '1' when (branch_decision_ID /= taken) else '0';
-    wrong_predict <= "01" when branch_decision_ID /= taken else "00";
+    bubble_branch_ID <= '1' when ((((branch_decision_ID xor taken) and branch_ID)) or jump_ID) = '1' else '0';
+    wrong_predict <= "01" when ((branch_decision_ID xor taken) and branch_ID) = '1' else "00";
 
     -- Testbench signals
     branch_bit <= predict_branch(to_integer(unsigned(index_id)));

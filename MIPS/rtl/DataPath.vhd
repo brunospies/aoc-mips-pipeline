@@ -56,6 +56,7 @@ architecture structural of DataPath is
     signal uins_EX : Microinstruction;
     signal writeRegister_EX, rd_EX, rt_EX, rs_EX : std_logic_vector(4 downto 0);
     signal zero_EX, bubble_hazard_EX : std_logic;
+    signal branchTarget_EX, incrementedPC_EX : std_logic_vector(31 downto 0);
 
     -- Memory Stage Signals:
     signal result_MEM : std_logic_vector(31 downto 0);
@@ -244,7 +245,11 @@ begin
             rd_in                 => rd_ID_mux,  --
             rd_out                => rd_EX,  
             uins_in               => uins_ID_mux, --
-            uins_out              => uins_EX
+            uins_out              => uins_EX,
+            branchTarget_in      => branchTarget, --
+            branchTarget_out     => branchTarget_EX,
+            incrementedPC_in     => incrementedPC_ID, --
+            incrementedPC_out    => incrementedPC_EX
         );
 
     -- Stage Memory of Pipeline
@@ -324,7 +329,10 @@ begin
             predicted_IF        => predicted_IF,
             bubble_branch_ID       => bubble_branch_ID,
             jumpTarget_ID       => jumpTarget_ID,
-            jump_ID            => uins_ID.Jump
+            jump_ID            => uins_ID.Jump,
+            branch_EX           => uins_EX.Branch,
+            incrementedPC_EX          => incrementedPC_EX,
+            branchTarget_EX     => branchTarget_EX
         );
 
     -- MemWrite receive signal of Stage MEM
