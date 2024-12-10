@@ -42,9 +42,11 @@ architecture behavioral of Branch_predictor is
     -- Instruction fetch
     alias tag_pc_IF is incrementedPC_IF(31 downto 12);
     alias index_IF  is incrementedPC_IF(12 downto 2);
+    signal taken_IF : std_logic;
 
     -- Instruction execution
     alias index_ID  is incrementedPC_ID(12 downto 2);
+    signal taken_ID : std_logic;
 
     -- Instruction execution stage
     alias tag_pc_EX is incrementedPC_EX(31 downto 12);
@@ -52,7 +54,6 @@ architecture behavioral of Branch_predictor is
 
     -- Prediction FSM
     signal new_predict_branch : std_logic_vector(1 downto 0); 
-    signal taken : std_logic;
 
 begin            
     -- Process to write the history table when a branch
@@ -117,11 +118,26 @@ begin
         if rising_edge(clock) then 
             case predict_branch_table(to_integer(unsigned(index_IF))) is
                 when "11" | "10" =>
-                    taken <= '1';   -- Branch taken
+                    taken_IF <= '1';   -- Branch taken
                 when "01" | "00" =>
-                    taken <= '0';   -- Branch not taken
+                    taken_IF <= '0';   -- Branch not taken
                 when others =>
-                    taken <= '0';   -- Default not taken
+                    taken_IF <= '0';   -- Default not taken
+            end case;
+        end if;
+    end process;
+
+    -- Process to determine if the branch is taken or not
+    process(clock, index_ID)
+    begin
+        if rising_edge(clock) then 
+            case predict_branch_table(to_integer(unsigned(index_ID))) is
+                when "11" | "10" =>
+                    taken_ID <= '1';   -- Branch taken
+                when "01" | "00" =>
+                    taken_ID <= '0';   -- Branch not taken
+                when others =>
+                    taken_ID <= '0';   -- Default not taken
             end case;
         end if;
     end process;
@@ -129,15 +145,12 @@ begin
     -- Control the PC multiplexer based on the prediction
     MUX_PC_CONTROL: pc_predicted_IF <= branchPC_table(to_integer(unsigned(index_IF))) when (taken = '1' and valid_index_table(to_integer(unsigned(index_IF))) = '1' 
                         and tag_memory_table(to_integer(unsigned(index_IF))) = tag_pc_IF) else -- Branch prediction in the table 
-                        branchTarget_ID when (branch_decision_ID /= taken) and (branch_decision_ID = '1') and (branch_ID = '1') else -- Should have been taken but was not taken
-                        incrementedPC_ID when (branch_decision_ID /= taken) and (branch_decision_ID = '0') and (branch_ID = '1') else -- Should have been not taken but was taken
+                        branchTarget_ID when (branch_decision_ID /= taken_ID) and (branch_decision_ID = '1') and (branch_ID = '1') else -- Should have been taken but was not taken
+                        incrementedPC_ID when (branch_decision_ID /= taken_ID) and (branch_decision_ID = '0') and (branch_ID = '1') else -- Should have been not taken but was taken
                         jumpTarget_ID when jump_ID = '1' else -- Jump instruction
                         incrementedPC_IF; -- Default PC
 
-    -- Output the prediction status
-    predicted_IF <= taken;
-
     -- Bubble the branch or jump instruction in the ID stage
-    bubble_branch_ID <= '1' when (((branch_decision_ID xor taken) and branch_ID) or jump_ID) = '1' else '0';
+    bubble_branch_ID <= '1' when (((branch_decision_ID xor taken_ID) and branch_ID) or jump_ID) = '1' else '0';
 
 end behavioral;
