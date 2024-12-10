@@ -24,7 +24,7 @@ entity DataPath is
         dataAddress         : out std_logic_vector(31 downto 0);  -- Data memory address bus
         data_i              : in  std_logic_vector(31 downto 0);  -- Data bus from data memory 
         data_o              : out std_logic_vector(31 downto 0);  -- Data bus to data memory
-	    MemWrite            : out std_logic;
+        MemWrite            : out std_logic;
         uins_ID             : in  Microinstruction                -- Control path microinstruction
     );
 end DataPath;
@@ -81,6 +81,10 @@ architecture structural of DataPath is
 
     -- Tests
     signal zero_branch_test : std_logic_vector(1 downto 0);
+    signal correct_predictions : integer := 0;
+    signal incorrect_predictions : integer := 0;
+    signal total_predictions    : integer := 0;
+
     
 begin
 
@@ -209,7 +213,7 @@ begin
             clock               => clock, 
             reset               => reset,
             ce                  => ce_stage_ID,  
-	        incremented_pc_in   => incrementedPC_IF_mux, 
+            incremented_pc_in   => incrementedPC_IF_mux, 
             incremented_pc_out  => incrementedPC_ID,
             instruction_in      => instruction_IF_mux,
             instruction_out     => instruction_ID,
@@ -223,8 +227,8 @@ begin
             clock                 => clock, 
             reset                 => reset,
             read_data_1_in        => Data1_ID_mux, -- 
-      	    read_data_1_out       => readData1_EX,
-	        read_data_2_in        => Data2_ID_mux, --
+            read_data_1_out       => readData1_EX,
+            read_data_2_in        => Data2_ID_mux, --
             read_data_2_out       => readData2_EX,
             imediate_extended_in  => signExtended_ID_mux, --
             imediate_extended_out => signExtended_EX,
@@ -249,9 +253,9 @@ begin
         port map (
             clock            => clock, 
             reset            => reset,
-	        alu_result_in    => result_EX,
+            alu_result_in    => result_EX,
             alu_result_out   => result_MEM,
-	        write_data_in    => operand2,
+            write_data_in    => operand2,
             write_data_out   => data_o,
             write_reg_in     => writeRegister_EX,
             write_reg_out    => writeRegister_MEM,
@@ -268,7 +272,7 @@ begin
             write_reg_out    => writeRegister_WB,
             read_data_in     => data_i, 
             read_data_out    => data_i_WB,
-	        alu_result_in    => result_MEM,
+            alu_result_in    => result_MEM,
             alu_result_out   => result_WB,
             uins_in          => uins_MEM,
             uins_out         => uins_WB
@@ -326,6 +330,26 @@ begin
             branch_EX          => uins_EX.Branch,
             branchTarget_EX    => branchTarget_EX
         );
+
+        -- Process to track and evaluate the performance of the branch predictor
+        process(clock, reset)
+        begin
+            if reset = '1' then
+                correct_predictions <= 0;
+                incorrect_predictions <= 0;
+                total_predictions <= 0;
+            elsif rising_edge(clock) then
+                if uins_ID.Branch = '1' then
+                    total_predictions <= total_predictions + 1;
+                    if predicted_IF = branch_decision_ID then
+                        correct_predictions <= correct_predictions + 1;
+                    else
+                        incorrect_predictions <= incorrect_predictions + 1;
+                    end if;
+                end if;
+            end if;
+        end process;
+        
     -- MemWrite receive signal of Stage MEM
     MemWrite <= uins_MEM.MemWrite;
 
