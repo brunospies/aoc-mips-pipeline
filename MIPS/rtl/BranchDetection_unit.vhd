@@ -13,7 +13,8 @@ entity BranchDetection_unit is
         Branch_ID          : in  std_logic;
         zero_branch        : in  std_logic;
         jump_ID            : in  std_logic;
-        bubble_branch_ID   : out std_logic
+        bubble_branch_ID   : out std_logic;
+        predicted_ID         : in  std_logic
     );
 end BranchDetection_unit;
 
@@ -21,6 +22,6 @@ architecture arch1 of BranchDetection_unit is
 
 begin
 
-    bubble_branch_ID <= (Branch_ID and zero_branch) or jump_ID;
+    bubble_branch_ID <= (predicted_ID and not zero_branch) or jump_ID;
             
 end arch1;
